@@ -3,7 +3,6 @@ package com.bit.final_project.controllers;
 import com.bit.final_project.dto.UserDto;
 import com.bit.final_project.models.User;
 import com.bit.final_project.security.filters.CurrentUser;
-import com.bit.final_project.security.filters.UserHelper;
 import com.bit.final_project.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,4 +34,10 @@ public class UserController {
         userDto.setEmail(user.getEmail());
         return userDto;
     }
+    @PostMapping("/test")
+    public @ResponseBody
+    String test(){
+        return "success";
+    }
+
 }
