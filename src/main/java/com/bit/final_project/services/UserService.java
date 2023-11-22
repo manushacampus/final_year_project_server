@@ -1,6 +1,8 @@
 package com.bit.final_project.services;
 
 import com.bit.final_project.commons.Generator;
+import com.bit.final_project.commons.storage.model.AppFile;
+import com.bit.final_project.commons.storage.service.FilesStorageService;
 import com.bit.final_project.dto.UserDto;
 import com.bit.final_project.exceptions.UserNotFoundException;
 import com.bit.final_project.exceptions.http.UnauthorizeException;
@@ -10,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -20,6 +25,8 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    FilesStorageService filesStorageService;
 
     public User login(UserDto request){
         log.info("User Login loginId = {}",request.getEmail());
@@ -50,6 +57,20 @@ public class UserService {
             throw new UserNotFoundException("Bad Request","user not found for id = "+userId);
         }
         return user.get();
+    }
+    public String test(MultipartFile multiImage) throws IOException {
+        String extension= FilenameUtils.getExtension(multiImage.getOriginalFilename());
+        log.info("hhhhhhhhhhhh={}",multiImage.getInputStream());
+        AppFile image = new AppFile(
+                "sample",
+                Generator.getUUID(),
+                extension,
+                multiImage.getInputStream()
+        );
+        log.info("tttttttttttttttttt={}",image);
+        AppFile saveEmployeeImage=filesStorageService.save(image);
+        log.info("User Login loginId =",saveEmployeeImage);
+        return "service worked";
     }
 
 }

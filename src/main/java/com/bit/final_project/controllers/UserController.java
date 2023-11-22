@@ -1,5 +1,6 @@
 package com.bit.final_project.controllers;
 
+import com.bit.final_project.dto.TestDto;
 import com.bit.final_project.dto.UserDto;
 import com.bit.final_project.models.User;
 import com.bit.final_project.security.filters.CurrentUser;
@@ -7,6 +8,9 @@ import com.bit.final_project.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @Slf4j
@@ -36,8 +40,10 @@ public class UserController {
     }
     @PostMapping("/test")
     public @ResponseBody
-    String test(){
-        return "success";
+    String test(@ModelAttribute TestDto request) throws IOException {
+        log.info("jjjjjjjjjjjjj={}",request.getName());
+        userService.test(request.getMultiImage());
+        return "d";
     }
 
 }
