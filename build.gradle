@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.1'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'application'
+    id 'org.sonarqube' version '3.3'
 }
 
 group = 'com.bit'
@@ -17,12 +18,8 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://repo.spring.io/release"
-    }
-    maven {
-        url "https://repository.jboss.org/maven2"
-    }
+    maven { url 'https://repo.spring.io/milestone' } // Spring Milestone repository for newer releases
+    maven { url 'https://repo.spring.io/snapshot' }  // Spring Snapshot repository for snapshot releases
 }
 
 dependencies {
@@ -41,7 +38,15 @@ dependencies {
 
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.918'
     implementation 'commons-io:commons-io:2.13.0'
+    implementation group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.3'
+}
 
+sonarqube {
+    properties {
+        property 'sonar.projectKey', 'manushacampus_final_year_project_server'
+        property 'sonar.organization', 'manushacampus'
+        property 'sonar.host.url', 'https://sonarcloud.io'
+    }
 }
 
 tasks.named('test') {
