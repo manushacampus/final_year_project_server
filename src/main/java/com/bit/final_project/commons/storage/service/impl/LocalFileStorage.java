@@ -60,9 +60,20 @@ public class LocalFileStorage implements FilesStorageService{
     public ResponseEntity<byte[]> get(AppFile appFile) throws IOException {
         String file=globalConfigs.getHomeDir()+"/"+appFile.getFolderName()+"/"+appFile.getFileName();
         Path path = Paths.get(file);
-        InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ);
-        MimeType mimeType = MimeType.valueOf(Files.probeContentType(path));
-        return ResponseEntity.ok().contentType(MediaType.asMediaType(mimeType)).body(IOUtils.toByteArray(inputStream));
+        try (InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ)) {
+            MimeType mimeType = MimeType.valueOf(Files.probeContentType(path));
+            byte[] fileContent = IOUtils.toByteArray(inputStream); // Assuming you have Apache Commons IO
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.asMediaType(mimeType))
+                    .body(fileContent);
+        } catch (IOException e) {
+            // Handle or log the exception as needed
+            throw e;
+        }
+//        InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ);
+//        MimeType mimeType = MimeType.valueOf(Files.probeContentType(path));
+//        return ResponseEntity.ok().contentType(MediaType.asMediaType(mimeType)).body(IOUtils.toByteArray(inputStream));
     }
     @Override
     public AppFile delete(AppFile appFile) throws IOException{

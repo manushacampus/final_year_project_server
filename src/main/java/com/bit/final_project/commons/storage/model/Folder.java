@@ -19,6 +19,7 @@ public class Folder {
     public static final String APPLICATION = "applications";
     public static final String ASSETS = "assets";
     public static final String ORG = "organization";
+    public static final String FOLDER_PATH = "VIDITURE_HOME";
 
 
     public static String path(String... folders) {
@@ -38,7 +39,7 @@ public class Folder {
     }
 
     public static String pathForOutputDocument(String document, String fileName){
-        String base = System.getenv().get("VIDITURE_HOME");
+        String base = System.getenv().get(FOLDER_PATH);
         return base + "/" + Folder.path(Folder.DOCUMENT, document) + "/" + fileName;
     }
 
@@ -55,12 +56,12 @@ public class Folder {
     }
 
     public static String pathForLocalTempFile(String file) {
-        String base = System.getenv().get("VIDITURE_HOME");
+        String base = System.getenv().get(FOLDER_PATH);
         return base + "/_local_temp/" + file;
     }
 
     public static String pathForLocalTempFileWithExtension(String extension) {
-        String base = System.getenv().get("VIDITURE_HOME");
+        String base = System.getenv().get(FOLDER_PATH);
         return base + "/_local_temp/" + Generator.getRandomString() + "." + extension;
     }
 }
