@@ -41,7 +41,8 @@ public class LocalFileStorage implements FilesStorageService{
             try {
                 return Files.createDirectory(tmpDir.toPath()).toFile();
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
             }
         }
         return tmpDir;
