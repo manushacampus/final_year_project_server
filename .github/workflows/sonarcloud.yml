@@ -26,8 +26,8 @@ jobs:
           distribution: 'adopt'
           java-version: '8'
 
-      - name: Build with Maven
-        run: mvn clean install 
+      - name: Build with Gradle
+        run: ./gradlew build
 
       - name: Analyze with SonarCloud
         if: ${{ github.event_name != 'pull_request' }}
