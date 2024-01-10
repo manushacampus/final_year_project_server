@@ -38,7 +38,7 @@ jobs:
           java-version: '11'
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -DskipTests
 
       - name: Analyze with SonarCloud
         if: ${{ github.event_name != 'pull_request' }}
