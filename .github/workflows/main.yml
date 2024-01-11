@@ -30,7 +30,7 @@ jobs:
         docker push $REGISTRY/your-image-name:latest
 
     - name: SSH into Azure VM and Update Docker Container
-      uses: appleboy/ssh-action@main
+      uses: panubo/ssh-action@v2.4.0
       with:
         host: ${{ secrets.AZURE_VM_IP }}
         username: ${{ secrets.AZURE_VM_USERNAME }}
