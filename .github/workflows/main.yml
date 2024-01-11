@@ -29,7 +29,7 @@ jobs:
         echo $PASSWORD | docker login $REGISTRY -u $USERNAME --password-stdin
         docker push $REGISTRY/your-image-name:latest
 
-    - name: SSH into Azure VM and Pull Docker Image
+    - name: SSH into Azure VM and Update Docker Container
       uses: appleboy/ssh-action@v0.4.2
       with:
         host: ${{ secrets.AZURE_VM_IP }}
@@ -37,12 +37,6 @@ jobs:
         key: ${{ secrets.AZURE_VM_SSH_KEY }}
         script: |
           docker pull $REGISTRY/your-image-name:latest
-
-    - name: Run Docker Container on Azure VM
-      uses: appleboy/ssh-action@v0.4.2
-      with:
-        host: ${{ secrets.AZURE_VM_IP }}
-        username: ${{ secrets.AZURE_VM_USERNAME }}
-        key: ${{ secrets.AZURE_VM_SSH_KEY }}
-        script: |
-          docker run -d -p 8080:8080 $REGISTRY/your-image-name:latest
+          docker stop your-container-name || true
+          docker rm your-container-name || true
+          docker run -d --name your-container-name -p 8080:8080 $REGISTRY/your-image-name:latest
