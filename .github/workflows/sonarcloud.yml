@@ -1,43 +1,33 @@
-name: SonarCloud analysis
+name: Deploy to Azure VM
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
-
-permissions:
-  pull-requests: read
 
 jobs:
-  Analysis:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout Repository
+      uses: actions/checkout@v2
 
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+    - name: Build and Push Docker Image
+      run: |
+        echo ${{ secrets.AZURE_DOCKER_PASSWORD }} | docker login -u ${{ secrets.AZURE_DOCKER_USERNAME }} --password-stdin
+        docker build -t my-spring-app .
+        docker tag my-spring-app ${{ secrets.AZURE_DOCKER_REGISTRY }}/my-spring-app:latest
+        docker push ${{ secrets.AZURE_DOCKER_REGISTRY }}/my-spring-app:latest
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-
-      - name: Build and analyze with SonarQube
-        run: |
-          ./gradlew build -DskipTests
-          ./gradlew sonarqube -Dsonar.organization=manushacampus -Dsonar.projectKey=manushacampus_final_year_project_server -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+    - name: SSH into Azure VM
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.AZURE_VM_IP }}
+        username: ${{ secrets.AZURE_VM_USERNAME }}
+        key: ${{ secrets.AZURE_VM_SSH_PRIVATE_KEY }}
+        script: |
+          docker stop my-spring-app || true
+          docker rm my-spring-app || true
+          docker pull ${{ secrets.AZURE_DOCKER_REGISTRY }}/my-spring-app:latest
+          docker run -d -p 8080:8080 --name my-spring-app ${{ secrets.AZURE_DOCKER_REGISTRY }}/my-spring-app:latest
