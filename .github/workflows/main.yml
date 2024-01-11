@@ -31,8 +31,6 @@ jobs:
 
     - name: SSH into Azure VM and Update Docker Container
       uses: appleboy/ssh-action@latest  # Use the latest available version
-
-
       with:
         host: ${{ secrets.AZURE_VM_IP }}
         username: ${{ secrets.AZURE_VM_USERNAME }}
