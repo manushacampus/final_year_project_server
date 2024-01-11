@@ -1,4 +1,4 @@
-name: Build and Deploy to Azure VM
+name: Deploy to Azure VM
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-gradle:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,77 +18,31 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: '11'
-        
-    - name: Add Execution Permission to gradlew
-      run: chmod +x gradlew
-      
-    - name: Build with Gradle
-      run: ./gradlew build -DskipTests
-      id: gradle
 
-  build-docker:
-    needs: build-gradle
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v1
-
-    - name: Build and Publish Docker Image
+    - name: Build and Push Docker Image
+      env:
+        REGISTRY: ${{ secrets.AZURE_REGISTRY }}
+        USERNAME: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+        PASSWORD: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
       run: |
-        docker build -t my-spring-app .
-        docker save my-spring-app:latest | gzip > my-spring-app.tar.gz
-        echo "::set-output name=image_path::my-spring-app.tar.gz"
-      id: docker
+        docker build -t $REGISTRY/your-image-name:latest .
+        echo $PASSWORD | docker login $REGISTRY -u $USERNAME --password-stdin
+        docker push $REGISTRY/your-image-name:latest
 
-  deploy:
-    needs: build-docker
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v1
-
-    - name: Download Docker Image Artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: my-spring-app
-        path: /tmp
-
-    - name: Copy Docker Image to Azure VM
-      uses: appleboy/ssh-action@master
+    - name: SSH into Azure VM and Pull Docker Image
+      uses: appleboy/ssh-action@v0.4.2
       with:
         host: ${{ secrets.AZURE_VM_IP }}
         username: ${{ secrets.AZURE_VM_USERNAME }}
-        key: ${{ secrets.AZURE_VM_SSH_PRIVATE_KEY }}
+        key: ${{ secrets.AZURE_VM_SSH_KEY }}
         script: |
-          scp -i /path/to/private/key /tmp/my-spring-app.tar.gz ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/path/on/azure/vm
+          docker pull $REGISTRY/your-image-name:latest
 
-    - name: SSH into Azure VM and Deploy
-      uses: appleboy/ssh-action@master
+    - name: Run Docker Container on Azure VM
+      uses: appleboy/ssh-action@v0.4.2
       with:
         host: ${{ secrets.AZURE_VM_IP }}
         username: ${{ secrets.AZURE_VM_USERNAME }}
-        key: ${{ secrets.AZURE_VM_SSH_PRIVATE_KEY }}
+        key: ${{ secrets.AZURE_VM_SSH_KEY }}
         script: |
-          cd /path/on/azure/vm
-          gzip -d my-spring-app.tar.gz
-          docker load -i my-spring-app.tar
-
-          # Stop and remove any existing container with the same name
-          docker stop my-spring-app || true
-          docker rm my-spring-app || true
-
-          # Run the Docker container in detached mode (-d) on port 8080
-          docker run -d -p 8080:8080 --name my-spring-app my-spring-app:latest
-
-          # Add any additional commands or checks needed after deployment
-          # For example, you might want to add a sleep command to wait for the application to fully start
-          sleep 10
-          # Additional commands can be added based on your application requirements
+          docker run -d -p 8080:8080 $REGISTRY/your-image-name:latest
