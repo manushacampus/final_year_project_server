@@ -9,5 +9,4 @@ RUN gradle build --no-daemon
 FROM openjdk:11-jre-slim
 WORKDIR /app
 COPY --from=build /app/build/libs/final_project-0.0.1-SNAPSHOT.jar my-spring-app.jar
-COPY --from=build /app/dskiptest ./dskiptest
 CMD ["java", "-jar", "my-spring-app.jar"]
