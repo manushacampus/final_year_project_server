@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # Copy the compiled JAR file into the container
-COPY target/your-spring-boot-app.jar app.jar
+COPY target/0.0.1.jar app.jar
 
 # Specify the command to run your application
 CMD ["java", "-jar", "app.jar"]
