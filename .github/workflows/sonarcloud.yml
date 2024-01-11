@@ -13,21 +13,38 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Build and Push Docker Image
+    - name: Create Docker Image Tarball
       run: |
-        echo ${{ secrets.AZURE_DOCKER_PASSWORD }} | docker login -u ${{ secrets.AZURE_DOCKER_USERNAME }} --password-stdin
-        docker build -t my-spring-app .
-        docker tag my-spring-app ${{ secrets.AZURE_DOCKER_REGISTRY }}/my-spring-app:latest
-        docker push ${{ secrets.AZURE_DOCKER_REGISTRY }}/my-spring-app:latest
-
-    - name: SSH into Azure VM
+        # Assuming your Docker image is named 'my-spring-app'
+        docker save my-spring-app:latest | gzip > my-spring-app.tar.gz
+        
+    - name: Copy Docker Image to Azure VM
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.AZURE_VM_IP }}
         username: ${{ secrets.AZURE_VM_USERNAME }}
         key: ${{ secrets.AZURE_VM_SSH_PRIVATE_KEY }}
         script: |
+          scp -i /path/to/private/key my-spring-app.tar.gz ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/path/on/azure/vm
+
+    - name: SSH into Azure VM and Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.AZURE_VM_IP }}
+        username: ${{ secrets.AZURE_VM_USERNAME }}
+        key: ${{ secrets.AZURE_VM_SSH_PRIVATE_KEY }}
+        script: |
+          cd /path/on/azure/vm
+          docker load -i my-spring-app.tar.gz
+
+          # Stop and remove any existing container with the same name
           docker stop my-spring-app || true
           docker rm my-spring-app || true
-          docker pull ${{ secrets.AZURE_DOCKER_REGISTRY }}/my-spring-app:latest
-          docker run -d -p 8080:8080 --name my-spring-app ${{ secrets.AZURE_DOCKER_REGISTRY }}/my-spring-app:latest
+
+          # Run the Docker container in detached mode (-d) on port 8080
+          docker run -d -p 8080:8080 --name my-spring-app my-spring-app:latest
+
+          # Add any additional commands or checks needed after deployment
+          # For example, you might want to add a sleep command to wait for the application to fully start
+          sleep 10
+          # Additional commands can be added based on your application requirements
