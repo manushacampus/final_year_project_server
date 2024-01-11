@@ -3,7 +3,6 @@ FROM gradle:7.2-jdk11 AS build
 WORKDIR /app
 COPY build.gradle settings.gradle .
 COPY src ./src
-COPY dskiptest ./dskiptest
 RUN gradle build --no-daemon
 
 # Stage 2: Application stage
