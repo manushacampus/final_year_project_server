@@ -18,7 +18,10 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: '11'
-
+        
+    - name: Add Execution Permission to gradlew
+      run: chmod +x gradlew
+      
     - name: Build with Gradle
       run: ./gradlew build -DskipTests
 
