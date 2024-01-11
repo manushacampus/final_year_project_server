@@ -19,7 +19,7 @@ jobs:
         distribution: 'adopt'
         java-version: '11'
 
-    - name: Build with gradle
+    - name: Build with Gradle
       run: ./gradlew build -DskipTests
 
   deploy:
@@ -28,7 +28,13 @@ jobs:
     needs: build
 
     steps:
-    - name: Create Docker Image
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build Docker Image
       run: |
         docker build -t my-spring-app .
         docker save my-spring-app:latest | gzip > my-spring-app.tar.gz
