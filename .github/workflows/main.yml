@@ -30,13 +30,10 @@ jobs:
         docker push $REGISTRY/your-image-name:latest
 
     - name: SSH into Azure VM and Update Docker Container
-      uses: panubo/ssh-action@v2.4.0
-      with:
-        host: ${{ secrets.AZURE_VM_IP }}
-        username: ${{ secrets.AZURE_VM_USERNAME }}
-        key: ${{ secrets.AZURE_VM_SSH_KEY }}
-        script: |
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ${{ secrets.AZURE_VM_SSH_KEY }} ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.AZURE_VM_IP }} 'bash -s' << 'ENDSSH'
           docker pull $REGISTRY/your-image-name:latest
           docker stop your-container-name || true
           docker rm your-container-name || true
           docker run -d --name your-container-name -p 8080:8080 $REGISTRY/your-image-name:latest
+        ENDSSH
