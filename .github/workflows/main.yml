@@ -30,7 +30,7 @@ jobs:
         docker push $REGISTRY/your-image-name:latest
 
     - name: SSH into Azure VM and Update Docker Container
-      uses: appleboy/ssh-action@70f9535  # Replace with the commit hash of the desired release
+      uses: appleboy/ssh-action@main
       with:
         host: ${{ secrets.AZURE_VM_IP }}
         username: ${{ secrets.AZURE_VM_USERNAME }}
