@@ -7,10 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.Instant;
 
 @Getter
@@ -24,6 +21,7 @@ public class User {
         EMPLOYEE,CUSTOMER
     }
     @Id
+    @Column(name = "id")
     private String id;
     private String first_name;
     private String last_name;
