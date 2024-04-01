@@ -37,7 +37,7 @@ jobs:
         run: |
           echo "${{ secrets.KUBE_CONFIG_DATA }}"
 
-      # Deploy Docker image to Kubernetes
-      - name: Deploy Docker Image to Kubernetes
+      - name: Deploy to Kubernetes
         run: |
-          kubectl set image deployment/my-deployment my-container=pasindu55/aluminium_backend:${{ github.sha }}
+           kubectl apply -f kubernetes/
+
