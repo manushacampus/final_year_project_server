@@ -1,4 +1,4 @@
-name: Deploy Java App
+name: Deploy Java App with Docker and Kubernetes
 
 on:
   push:
@@ -13,29 +13,28 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # Build and Push Docker Image (if required)
-      - name: Build and Push Docker Image
+      # Build Docker Image
+      - name: Build Docker Image
+        run: |
+          docker build -t pasindu55/aluminium_backend .
+          docker tag pasindu55/aluminium_backend:latest pasindu55/aluminium_backend:{{ github.sha }}
+
+      # Push Docker Image to Registry (if required)
+      - name: Push Docker Image to Registry
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker build -t pasindu55/aluminium_backend .
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-          docker push pasindu55/aluminium_backend
+          docker push pasindu55/aluminium_backend:{{ github.sha }}
 
-             
-      # Install SSH client for deployment
-      - name: Install SSH client
-        run: sudo apt-get install -y openssh-client
+      # Install kubectl
+      - name: Install kubectl
+        uses: azure/k8s-set-context@v1
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
 
-      # Use SSH private key for authentication
-      - name: Use SSH private key
+      # Deploy Docker image to Kubernetes
+      - name: Deploy Docker Image to Kubernetes
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 4.213.119.32 >> ~/.ssh/known_hosts
-
-      
-
-   
+          kubectl set image deployment/my-deployment my-container=pasindu55/aluminium_backend:{{ github.sha }}
