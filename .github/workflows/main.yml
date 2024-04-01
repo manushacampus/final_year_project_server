@@ -23,10 +23,6 @@ jobs:
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
           docker push pasindu55/aluminium_backend
 
-      # Scan Docker image for vulnerabilities using Trivy
-      - name: Scan Docker image for vulnerabilities
-        run: |
-             docker run --rm -v $(pwd):/workdir aquasec/trivy pasindu55/aluminium_backend
              
       # Install SSH client for deployment
       - name: Install SSH client
