@@ -38,7 +38,7 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG_DATA }}"
 
       - name: Deploy to Kubernetes
-        uses: steebchen/kubectl@v2
+        uses: steebchen/kubectl@master
         with:
          args: set image deployment/my-deployment my-container=pasindu55/aluminium_backend:${{ github.sha }}
         env:
