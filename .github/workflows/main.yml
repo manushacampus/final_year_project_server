@@ -16,8 +16,9 @@ jobs:
       # Build Docker Image
       - name: Build Docker Image
         run: |
-          docker build -t pasindu55/aluminium_backend .
-          docker tag pasindu55/aluminium_backend:latest pasindu55/aluminium_backend:{{ github.sha }}
+           docker build -t pasindu55/aluminium_backend .
+           docker tag pasindu55/aluminium_backend:latest pasindu55/aluminium_backend:${{ github.sha }}
+
 
       # Push Docker Image to Registry (if required)
       - name: Push Docker Image to Registry
@@ -25,8 +26,9 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-          docker push pasindu55/aluminium_backend:{{ github.sha }}
+            run: |
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            docker push pasindu55/aluminium_backend:${{ github.sha }}
 
       # Install kubectl
       - name: Install kubectl
