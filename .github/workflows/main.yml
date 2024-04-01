@@ -1,4 +1,5 @@
-name: Deploy java App
+name: Deploy Java App
+
 on:
   push:
     branches:
@@ -12,7 +13,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # Build Angular App and Docker Image
+      # Build and Push Docker Image (if required)
       - name: Build and Push Docker Image
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -34,4 +35,4 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 4.213.119.32 >> ~/.ssh/known_hosts
 
-    
+   
