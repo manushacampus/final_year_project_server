@@ -37,7 +37,8 @@ jobs:
 
       - name: Debug kubeconfig
         run: |
-           cat /home/runner/work/_temp/kubeconfig_1711958264748
+          echo "${{ secrets.KUBE_CONFIG_DATA }}"
+
 
 
       # Deploy Docker image to Kubernetes
