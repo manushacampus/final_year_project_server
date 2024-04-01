@@ -35,6 +35,11 @@ jobs:
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
 
+      - name: Debug kubeconfig
+        run: |
+           cat /home/runner/work/_temp/kubeconfig_1711958264748
+
+
       # Deploy Docker image to Kubernetes
       - name: Deploy Docker Image to Kubernetes
         run: |
