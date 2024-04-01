@@ -1,5 +1,4 @@
 name: Deploy Java App with Docker and Kubernetes
-
 on:
   push:
     branches:
