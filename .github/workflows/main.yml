@@ -13,6 +13,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Build Angular App
+        run: npm install && npm run build --prod
+
       - name: Build and Push Docker Image
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -31,5 +34,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 4.213.119.32 >> ~/.ssh/known_hosts
-          
-   
+
+      - name: Run Docker Container
+        run: |
+          ssh user@4.213.119.32 'docker run -d -p 8080:8080 pasindu55/aluminium_backend'
