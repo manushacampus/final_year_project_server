@@ -26,8 +26,8 @@ jobs:
       # Scan Docker image for vulnerabilities using Trivy
       - name: Scan Docker image for vulnerabilities
         run: |
-          docker run --rm -v $(pwd):/workdir aquasec/trivy pasindu55/aluminium_backend
-
+             docker run --rm -v $(pwd):/workdir aquasec/trivy pasindu55/aluminium_backend
+             
       # Install SSH client for deployment
       - name: Install SSH client
         run: sudo apt-get install -y openssh-client
