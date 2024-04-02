@@ -23,9 +23,11 @@ kind: Service
 metadata:
   name: spring-backend-service
 spec:
+  type: NodePort  # Change the service type to NodePort
   selector:
     app: spring-backend
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8080
+      port: 80  # Port exposed by the Service
+      targetPort: 8080  # Port on the backend pods to which traffic should be forwarded
+      nodePort: 30000  # Optional: Specify the NodePort value (range: 30000-32767)
