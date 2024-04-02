@@ -59,6 +59,9 @@ jobs:
       # Copy Build Files to Server and restart Docker container
       - name: Copy Build Files to Server and restart Docker container
         run: |
-          ssh -o StrictHostKeyChecking=no azureuser@4.213.119.32 "sudo docker pull pasindu55/aluminium_backend && sudo docker stop my-container && sudo docker rm my-container && sudo docker run -d -p 8080:8080 --name my-container pasindu55/aluminium_backend"
+          ssh -o StrictHostKeyChecking=no azureuser@4.213.119.32 "sudo docker pull pasindu55/aluminium_backend:${{ github.sha }} && sudo docker stop my-container && sudo docker rm my-container && sudo docker run -d -p 8080:8080 --name my-container pasindu55/aluminium_backend:${{ github.sha }}"
 
-     
+      # Optional: Start any services needed on the server, like Apache
+      - name: Start Apache on Server
+        run: |
+          ssh azureuser@4.213.119.32 "sudo systemctl start apache2"
