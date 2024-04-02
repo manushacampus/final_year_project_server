@@ -44,25 +44,4 @@ jobs:
         env:
            KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
-      # Install SSH client
-      - name: Install SSH client
-        run: sudo apt-get install -y openssh-client
-
-      # Use SSH private key
-      - name: Use SSH private key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 4.213.119.32 >> ~/.ssh/known_hosts
-
-      # Copy Build Files to Server and restart Docker container
-      - name: Copy Build Files to Server and restart Docker container
-        run: |
-         ssh -o StrictHostKeyChecking=no azureuser@4.213.119.32 "sudo docker pull pasindu55/aluminium_backend: && sudo docker run -d -p 80:80 pasindu55/aluminium_backend"
-
-
-      # Optional: Start any services needed on the server, like Apache
-      - name: Start Apache on Server
-        run: |
-          ssh azureuser@4.213.119.32 "sudo systemctl start apache2"
+     
