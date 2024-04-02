@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: my-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: my-app
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: my-container
-        image: my-image:latest
+        image: pasindu55/aluminium_backend:${{ github.sha }}
         ports:
         - containerPort: 8080
