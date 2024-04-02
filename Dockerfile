@@ -3,6 +3,9 @@ FROM gradle:7.2-jdk11 AS build
 WORKDIR /app
 COPY build.gradle settings.gradle .
 COPY src ./src
+# Expose port 8080 to the outside world
+EXPOSE 8080
+
 RUN gradle build --no-daemon
 
 # Stage 2: Application stage
