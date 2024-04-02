@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: backend
-        image: pasindu55/aluminium_backend:${{ github.sha }}
+        image: pasindu55/aluminium_backend
         ports:
         - containerPort: 8080
