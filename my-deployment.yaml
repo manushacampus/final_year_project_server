@@ -67,6 +67,7 @@ kind: Service
 metadata:
   name: mysql
 spec:
+  type: LoadBalancer 
   selector:
     app: mysql
   ports:
