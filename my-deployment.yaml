@@ -23,11 +23,52 @@ kind: Service
 metadata:
   name: spring-backend-service
 spec:
-  type: NodePort  # Change the service type to NodePort
+  type: NodePort
   selector:
     app: spring-backend
   ports:
     - protocol: TCP
-      port: 80  # Port exposed by the Service
-      targetPort: 8080  # Port on the backend pods to which traffic should be forwarded
-      nodePort: 30000  # Optional: Specify the NodePort value (range: 30000-32767)
+      port: 80
+      targetPort: 8080
+      nodePort: 30000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "123"
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
