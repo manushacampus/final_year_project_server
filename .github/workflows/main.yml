@@ -51,5 +51,6 @@ jobs:
       - name: Apply Kubernetes deployment
         run: |
           kubectl apply -f my-deployment.yaml
+          kubectl apply -f mysql-pv-claim.yaml
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
