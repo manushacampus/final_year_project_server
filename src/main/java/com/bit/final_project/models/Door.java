@@ -1,5 +1,5 @@
 package com.bit.final_project.models;
-import com.bit.final_project.dto.DoorDto;
+import com.bit.final_project.dto.entityDto.DoorDto;
 import lombok.Getter;
 import lombok.Setter;
 

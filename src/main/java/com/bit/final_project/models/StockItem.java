@@ -1,9 +1,14 @@
 package com.bit.final_project.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "stock_item")
+@Getter
+@Setter
 public class StockItem {
     @Id
     private String id;
@@ -18,5 +23,8 @@ public class StockItem {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "user_id")
     private Employee employee;
+    @ManyToOne
+    @JoinColumn(name = "job_id", referencedColumnName = "id")
+    private Job job;
 
 }

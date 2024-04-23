@@ -1,6 +1,5 @@
-package com.bit.final_project.dto;
+package com.bit.final_project.dto.entityDto;
 
-import com.bit.final_project.commons.Generator;
 import com.bit.final_project.models.Door;
 import lombok.Getter;
 import lombok.Setter;

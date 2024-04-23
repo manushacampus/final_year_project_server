@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class EmployeeRegisterDto {
 
-    private UserDto userDto;
-    private EmployeeDto employeeDto;
+    private String userDto;
+    private String employeeDto;
 }

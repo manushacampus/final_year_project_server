@@ -1,6 +1,7 @@
 package com.bit.final_project.models;
 
 import com.bit.final_project.dto.EmployeeDto;
+import com.bit.final_project.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,14 +12,12 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 public class Employee {
-    public enum Status{
-        ACTIVE, INACTIVE
-    }
     @Id
     @Column(name = "user_id")
     private String user_id;
     private BigDecimal salary;
     private String designation;
+    private String etf;
     private String type;
     @Enumerated(EnumType.STRING)
     private Status status;

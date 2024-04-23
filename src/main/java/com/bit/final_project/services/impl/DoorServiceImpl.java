@@ -1,6 +1,6 @@
 package com.bit.final_project.services.impl;
 
-import com.bit.final_project.dto.DoorDto;
+import com.bit.final_project.dto.entityDto.DoorDto;
 import com.bit.final_project.models.Door;
 import com.bit.final_project.repositories.Door.DoorRepository;
 import com.bit.final_project.services.DoorService;

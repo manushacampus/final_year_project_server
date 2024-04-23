@@ -8,9 +8,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class Customer {
-    public enum Status{
-        ACTIVE, INACTIVE
-    }
     @Id
     @Column(name = "user_id")
     private String user_id;

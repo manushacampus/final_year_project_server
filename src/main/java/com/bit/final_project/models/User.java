@@ -2,6 +2,8 @@ package com.bit.final_project.models;
 
 import com.bit.final_project.commons.Generator;
 import com.bit.final_project.dto.UserDto;
+import com.bit.final_project.enums.Status;
+import com.bit.final_project.enums.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,12 +16,6 @@ import java.time.Instant;
 @Setter
 @Entity
 public class User {
-    public enum Status{
-        ACTIVE, INACTIVE
-    }
-    public enum Role{
-        EMPLOYEE,CUSTOMER
-    }
     @Id
     @Column(name = "id")
     private String id;
@@ -35,7 +31,7 @@ public class User {
     private String image;
     private String contact;
     @Enumerated(EnumType.STRING)
-    private Role user_role;
+    private UserRole user_role;
     @Enumerated(EnumType.STRING)
     private Status status;
     @CreationTimestamp
