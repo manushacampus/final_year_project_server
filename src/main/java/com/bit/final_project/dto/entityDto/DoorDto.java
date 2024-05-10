@@ -9,8 +9,10 @@ import lombok.Setter;
 public class DoorDto {
     private String id;
     private String name;
+    private String code;
     private String height;
     private String width;
+    private String category;
 
     public DoorDto init(Door door){
         DoorDto doorDto = new DoorDto();

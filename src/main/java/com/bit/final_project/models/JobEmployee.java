@@ -13,6 +13,7 @@ public class JobEmployee {
     @Id
     private String id;
     private String status;
+    private String process_type;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "job_id")
     private Job job;

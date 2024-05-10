@@ -26,7 +26,7 @@ public class UserDto {
     public static UserDto init(User user){
         UserDto userDto = new UserDto();
         userDto.setFirstName(user.getFirst_name());
-        userDto.setLastName(userDto.getLastName());
+        userDto.setLastName(user.getLast_name());
         userDto.setAddress(user.getAddress());
         userDto.setEmail(user.getEmail());
         userDto.setGender(user.getGender());

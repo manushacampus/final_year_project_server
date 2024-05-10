@@ -1,5 +1,6 @@
 package com.bit.final_project.models;
 
+import com.bit.final_project.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,9 @@ public class StockItem {
     private String id;
     private String type;
     private String offer;
+    private int qty;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @OneToOne
     @JoinColumn(name = "door_id", referencedColumnName = "id")
     private Door door;
@@ -23,8 +27,6 @@ public class StockItem {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "user_id")
     private Employee employee;
-    @ManyToOne
-    @JoinColumn(name = "job_id", referencedColumnName = "id")
-    private Job job;
+
 
 }

@@ -4,6 +4,7 @@ import com.bit.final_project.dto.EmployeeDto;
 import com.bit.final_project.dto.UserDto;
 import com.bit.final_project.enums.Status;
 import com.bit.final_project.exceptions.http.BadRequestException;
+import com.bit.final_project.exceptions.http.EntityExistsException;
 import com.bit.final_project.mapper.EmployeeMapper;
 import com.bit.final_project.models.Employee;
 import com.bit.final_project.models.User;
@@ -28,9 +29,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+
     @Transactional
     public Employee register(UserDto userDto, EmployeeDto employeeDto){
         log.info("register employee email={}",userDto.getEmail());
+        log.info("register employee email={}",userDto.getLastName());
         if (userDto.getEmail().isEmpty() || userDto.getEmail()==""){
             throw new BadRequestException("email cant be null");
         }
@@ -48,5 +51,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         Pageable pageableRequest = PageRequest.of(page,size);
         Page<EmployeeDto> employeesPage= employeeRepository.findAll(pageableRequest).map(EmployeeMapper::convertToDTO);
         return employeesPage;
+    }
+
+    @Override
+    public Employee getEmployeeById(String id) {
+        return employeeRepository.findById(id).orElseThrow(()-> new EntityExistsException("Employee not found with id: " + id));
+    }
+
+    @Override
+    public Employee getEmployeeByUser(User user) {
+        return employeeRepository.findByUser(user);
     }
 }

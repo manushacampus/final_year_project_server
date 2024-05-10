@@ -17,4 +17,7 @@ import org.springframework.stereotype.Service;
 public interface EmployeeService {
     Employee register(UserDto userDto, EmployeeDto employeeDto);
     Page<EmployeeDto> getAll(int page, int size);
+
+    Employee getEmployeeById(String id);
+    Employee getEmployeeByUser(User user);
 }
