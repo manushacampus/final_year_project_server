@@ -8,4 +8,6 @@ import java.util.List;
 public interface DoorService {
     Door createDoor(DoorDto dto);
     List<Door> getDoorList();
+
+    Door getDoorById(String id);
 }

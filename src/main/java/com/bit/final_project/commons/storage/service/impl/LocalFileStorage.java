@@ -3,6 +3,7 @@ package com.bit.final_project.commons.storage.service.impl;
 import com.bit.final_project.commons.storage.model.AppFile;
 import com.bit.final_project.commons.storage.service.FilesStorageService;
 import com.bit.final_project.configs.GlobalConfigs;
+import com.bit.final_project.exceptions.UserNotFoundException;
 import com.bit.final_project.exceptions.http.BadRequestException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeType;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -83,6 +82,21 @@ public class LocalFileStorage implements FilesStorageService{
             Files.delete(path);
             System.out.println("File or directory deleted successfully");
         return appFile;
+    }
+
+    @Override
+    public AppFile read(AppFile sFile) {
+        String key = sFile.getRelativePathAsString();
+        log.info("local storage read file path key = {}", key);
+        String filePath = "E:/FinalProjectStorage" + "/" + key;
+        log.info("local storage read file path = {}", filePath);
+        File file = new File(filePath);
+        try {
+            sFile.setInputStream(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new UserNotFoundException("file not exist in the provided path " + filePath);
+        }
+        return sFile;
     }
 
 }

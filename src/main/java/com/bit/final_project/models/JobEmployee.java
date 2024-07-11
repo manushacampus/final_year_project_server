@@ -1,5 +1,6 @@
 package com.bit.final_project.models;
 
+import com.bit.final_project.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,8 @@ import javax.persistence.*;
 public class JobEmployee {
     @Id
     private String id;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private String process_type;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "job_id")

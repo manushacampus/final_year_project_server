@@ -12,6 +12,7 @@ public interface UserService {
     public  User register(UserDto request);
     public User getUserById(String userId);
     public String test(MultipartFile multiImage) throws IOException;
+    User findUserByEmail(String email);
 
 
 }

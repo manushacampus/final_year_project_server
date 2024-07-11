@@ -1,11 +1,12 @@
 package com.bit.final_project.services.impl;
 
 import com.bit.final_project.commons.Generator;
-import com.bit.final_project.dto.StockItemDto;
+import com.bit.final_project.commons.storage.model.AppFile;
+import com.bit.final_project.commons.storage.service.FilesStorageService;
 import com.bit.final_project.dto.entityDto.DoorDto;
 import com.bit.final_project.dto.entityDto.JobDto;
-import com.bit.final_project.enums.Progress;
-import com.bit.final_project.enums.Status;
+import com.bit.final_project.dto.entityDto.JobEmployeeDto;
+import com.bit.final_project.enums.*;
 import com.bit.final_project.exceptions.http.BadRequestException;
 import com.bit.final_project.exceptions.http.EntityExistsException;
 import com.bit.final_project.models.*;
@@ -15,15 +16,29 @@ import com.bit.final_project.repositories.Job.JobRepository;
 import com.bit.final_project.repositories.JobEmployee.JobEmployeeRepository;
 import com.bit.final_project.repositories.StockItem.StockItemRepository;
 import com.bit.final_project.repositories.Window.WindowRepository;
+import com.bit.final_project.security.filters.CurrentUser;
+import com.bit.final_project.services.DoorService;
+import com.bit.final_project.services.EmployeeService;
 import com.bit.final_project.services.JobService;
 import com.bit.final_project.services.StockService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class JobServiceImpl implements JobService {
     @Autowired
     DoorRepository doorRepository;
@@ -39,9 +54,17 @@ public class JobServiceImpl implements JobService {
     JobEmployeeRepository jobEmployeeRepository;
     @Autowired
     StockService stockService;
+    @Autowired
+    DoorService doorService;
+    @Autowired
+    EmployeeService employeeService;
+    @Autowired
+    FilesStorageService filesStorageService;
     @Transactional
     @Override
-    public Job createJobForDoor(DoorDto doorDto){
+    public Job createJobForDoor(JobDto jobDto, DoorDto doorDto){
+        log.info("job={}",jobDto.getDueDate());
+        log.info("door={}",doorDto.getCode());
         if (doorRepository.findByCode(doorDto.getCode())!=null){
             throw new EntityExistsException("exists code");
         }
@@ -49,17 +72,88 @@ public class JobServiceImpl implements JobService {
         StockItem stockItem = new StockItem();
         stockItem.setId(Generator.getUUID());
         stockItem.setDoor(doorResult);
-        stockItem.setStatus(Status.ACTIVE);
+        stockItem.setStatus(Status.INACTIVE);
+        stockItem.setType(PRODUCT_TYPE.DOOR);
+        stockItem.setQty(jobDto.getQty());
         stockItemRepository.save(stockItem);
         Job job = new Job();
         job.setId(Generator.getUUID());
-        job.setType("Door");
+        job.setType(PRODUCT_TYPE.DOOR);
+        job.setCreation_type(CREATION_TYPE.NEW);
         job.setProgress(Progress.NEW);
         job.setStatus(Status.ACTIVE);
+        job.setQty(jobDto.getQty());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (jobDto.getDueDate() != null && !jobDto.getDueDate().isEmpty()) {
+            job.setDueDate(LocalDate.parse(jobDto.getDueDate(), formatter));
+        }
+        job.setDescription(jobDto.getDescription());
         job.setStockItem(stockItem);
         Job jobResult = jobRepository.save(job);
 
         return jobResult;
+    }
+
+    @Override
+    @Transactional
+    public Job updateJobForDoor(JobDto jobDto, DoorDto doorDto) {
+        log.info("updateJobForDoor job id={}",jobDto.getId());
+        log.info("updateJobForDoor door id={}",doorDto.getId());
+        Door doorTest =doorRepository.findByCode(doorDto.getCode());
+//        if (doorTest!=null){
+//
+//            throw new EntityExistsException("exists code");
+//        }
+        Door door = doorService.getDoorById(doorDto.getId());
+        Job job = findById(jobDto.getId());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (jobDto.getDueDate() != null && !jobDto.getDueDate().isEmpty()) {
+            job.setDueDate(LocalDate.parse(jobDto.getDueDate(), formatter));
+        }
+        job.setQty(jobDto.getQty());
+
+        door.setCode(doorDto.getCode());
+        door.setName(doorDto.getName());
+        door.setHeight(doorDto.getHeight());
+        door.setWidth(doorDto.getWidth());
+        log.info("befor if door type={}",doorDto.getType());
+        if (doorDto.getType() != null && !doorDto.getType().isEmpty()) {
+            log.info("door type={}",doorDto.getType());
+            door.setType(DoorType.valueOf(doorDto.getType()));
+        }
+        door.setDoorColor(doorDto.getDoorColor());
+        if (doorDto.getFillingType() != null && !doorDto.getFillingType().isEmpty()) {
+            door.setFillingType(DoorFillingType.valueOf(doorDto.getFillingType()));
+        }
+        door.setBoardColor(doorDto.getBoardColor());
+        door.setGlassColor(doorDto.getGlassColor());
+        if (doorDto.getTypeOfBoard() != null && !doorDto.getTypeOfBoard().isEmpty()) {
+            door.setTypeOfBoard(TypeOfBoard.valueOf(doorDto.getTypeOfBoard()));
+        }
+        door.setBoardThickness(doorDto.getBoardThickness());
+        door.setGlassThickness(doorDto.getGlassThickness());
+        doorRepository.save(door);
+        return jobRepository.save(job);
+    }
+
+    @Override
+    public Job deleteJobForDoor(String id,String progress) {
+        Job job = findById(id);
+        if (Progress.NEW.equals(Progress.valueOf(progress)) ||
+                Progress.PENDING.equals(Progress.valueOf(progress)) ){
+            List<JobEmployee> k= jobEmployeeRepository.findByJob(job);
+            k.forEach(ks->{
+                ks.setStatus(Status.INACTIVE);
+            });
+            jobEmployeeRepository.saveAll(k);
+            job.setStatus(Status.INACTIVE);
+            return jobRepository.save(job);
+        }
+        throw new BadRequestException("Cannot Delete Processing or Completed Job");
+    }
+
+    public Job findById(String id){
+        return jobRepository.findById(id).orElseThrow(()-> new EntityExistsException("Job not found with id: " + id));
     }
 
     public List<Job> getJobs(){
@@ -67,11 +161,27 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> getJobBYStatusAndProgress(Status status, Progress progress) {
+    public Page<Job> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size) {
+        log.info("page={}",page);
+        log.info("size={}",size);
+        Pageable pageableRequest = PageRequest.of(page,size);
         if (progress.equals(Progress.ALL)){
-            return jobRepository.findByStatus(status);
+            return jobRepository.findByStatus(pageableRequest,status);
         }
-        return jobRepository.findByStatusAndProgress(status,progress);
+        return jobRepository.findByStatusAndProgress(pageableRequest,status,progress);
+    }
+
+    @Override
+    public List<Job> getJobEmployeeByStatus(Status status, Employee employee) {
+        log.info("service status={}",status);
+        log.info("service employee={}",employee.getUser_id());
+        List<JobEmployee> e= jobEmployeeRepository.findAllByStatusAndEmployee(status,employee);
+        List<Job> jobList = new ArrayList<>();
+        for (JobEmployee jobEmployee : e) {
+            log.info("list={}",jobEmployee.getJob().getQty());
+            jobList.add(jobEmployee.getJob());
+        }
+        return jobList;
     }
 //    @Transactional
 //    @Override
@@ -94,14 +204,15 @@ public class JobServiceImpl implements JobService {
 
     @Override
     @Transactional
-    public JobEmployee takeJobForEmployee(Job job, Employee employee) {
+    public JobEmployeeDto takeJobForEmployee(Job job, Employee employee) {
         job.setProgress(Progress.PENDING);
         jobRepository.save(job);
         JobEmployee jobEmployee = new JobEmployee();
         jobEmployee.setId(Generator.getUUID());
         jobEmployee.setEmployee(employee);
         jobEmployee.setJob(job);
-        return jobEmployeeRepository.save(jobEmployee);
+        jobEmployee.setStatus(Status.ACTIVE);
+        return JobEmployeeDto.init(jobEmployeeRepository.save(jobEmployee));
     }
 
     @Transactional
@@ -111,7 +222,88 @@ public class JobServiceImpl implements JobService {
         Job job = new Job();
         job.setId(Generator.getUUID());
         job.setType(stockItem.getType());
+        job.setCreation_type(CREATION_TYPE.PRODUCT);
+        job.setQty(1);
+        job.setDueDate(LocalDate.now());
+        job.setProgress(Progress.NEW);
+        job.setStatus(Status.ACTIVE);
+        job.setStockItem(stockItem);
+        return jobRepository.save(job);
+    }
 
+    @Override
+    @Transactional
+    public Job DoneTheJob(String jobId, MultipartFile image) throws IOException {
+        Job job = getJobById(jobId);
+        job.setProgress(Progress.DONE);
+        if (job.getCreation_type().equals(CREATION_TYPE.NEW)){
+            if (image==null || image.isEmpty()){
+                throw new BadRequestException("Product Image is empty!");
+            }
+            log.info("type={}",job.getCreation_type());
+            log.info("type 2={}",job.getType());
+            if (job.getType().equals(PRODUCT_TYPE.DOOR)){
+                log.info("Doortype={}",job.getType());
+                String extension= FilenameUtils.getExtension(image.getOriginalFilename());
+                AppFile appImage = new AppFile(
+                        "product",
+                        Generator.getUUID(),
+                        extension,
+                        image.getInputStream()
+                );
+                AppFile saveProductImage=filesStorageService.save(appImage);
+                Door door = doorService.getDoorById(job.getStockItem().getDoor().getId());
+                door.setImage(saveProductImage.getImageName());
+                door.setStatus(Status.ACTIVE);
+                doorRepository.save(door);
+                StockItem stockItem = stockService.getStockItemById(job.getStockItem().getId());
+                stockItem.setStatus(Status.ACTIVE);
+                stockItemRepository.save(stockItem);
+            }
+        }
+        if (job.getCreation_type().equals(CREATION_TYPE.PRODUCT)){
+            if (job.getType().equals(PRODUCT_TYPE.DOOR)){
+                StockItem stockItem = stockService.getStockItemById(job.getStockItem().getId());
+                stockItem.setQty(stockItem.getQty()+1);
+                stockItemRepository.save(stockItem);
+            }
+        }
+
+        return jobRepository.save(job);
+    }
+    @Override
+    @Transactional
+    public Job DoneTheJobByNew(String jobId){
+        Job job = getJobById(jobId);
+        job.setProgress(Progress.DONE);
+        if (job.getCreation_type().equals(CREATION_TYPE.NEW)){
+            log.info("type={}",job.getCreation_type());
+            log.info("type 2={}",job.getType());
+            if (job.getType().equals(PRODUCT_TYPE.DOOR)){
+                log.info("Doortype={}",job.getType());
+                Door door = doorService.getDoorById(job.getStockItem().getDoor().getId());
+                door.setStatus(Status.ACTIVE);
+                doorRepository.save(door);
+                StockItem stockItem = stockService.getStockItemById(job.getStockItem().getId());
+                stockItem.setStatus(Status.ACTIVE);
+                stockItemRepository.save(stockItem);
+            }
+        }
+        if (job.getCreation_type().equals(CREATION_TYPE.PRODUCT)){
+            if (job.getType().equals(PRODUCT_TYPE.DOOR)){
+                StockItem stockItem = stockService.getStockItemById(job.getStockItem().getId());
+                stockItem.setQty(stockItem.getQty()+1);
+                stockItemRepository.save(stockItem);
+            }
+        }
+
+        return jobRepository.save(job);
+    }
+
+    @Override
+    public Job startTheJob(String jobId) {
+        Job job = getJobById(jobId);
+        job.setProgress(Progress.PROCESSING);
         return jobRepository.save(job);
     }
 

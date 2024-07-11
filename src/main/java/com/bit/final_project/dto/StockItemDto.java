@@ -19,6 +19,10 @@ public class StockItemDto {
 
     public static StockItemDto init(StockItem stockItem){
         StockItemDto stockItemDto = new StockItemDto();
+        stockItemDto.setId(stockItem.getId());
+        stockItemDto.setType(String.valueOf(stockItem.getType()));
+        stockItemDto.setStatus(String.valueOf(stockItem.getStatus()));
+        stockItemDto.setDoor(DoorDto.init(stockItem.getDoor()));
         return stockItemDto;
     }
 

@@ -4,12 +4,10 @@ import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.services.StockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/stock")
@@ -23,5 +21,16 @@ public class StockController {
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),"success",stockService.getStockItemById(id)),HttpStatus.OK
         );
+    }
+    @GetMapping(params ={"page","size","status","type"})
+    public @ResponseBody
+    ResponseEntity<StandardResponse> getAllStockItemByStatusAndType(@Param("@page") int page,
+                                                  @Param("@size") int size,
+                                                  @Param("@status") String status,
+                                                  @Param("@type") String type){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success",stockService.getAllStockItemByStatusAndType(page,size,status,type)),HttpStatus.OK
+        );
+
     }
 }

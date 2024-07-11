@@ -22,6 +22,7 @@ public class User {
     private String first_name;
     private String last_name;
     private String address;
+    @Column(unique = true)
     private String email;
     private String password;
     private String gender;
@@ -30,6 +31,8 @@ public class User {
     private String registered_date;
     private String image;
     private String contact;
+    @Column(name = "verify_code")
+    private String verifyCode;
     @Enumerated(EnumType.STRING)
     private UserRole user_role;
     @Enumerated(EnumType.STRING)

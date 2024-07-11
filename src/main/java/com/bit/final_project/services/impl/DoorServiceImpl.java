@@ -2,6 +2,7 @@ package com.bit.final_project.services.impl;
 
 import com.bit.final_project.dto.entityDto.DoorDto;
 import com.bit.final_project.enums.Status;
+import com.bit.final_project.exceptions.http.EntityExistsException;
 import com.bit.final_project.models.Door;
 import com.bit.final_project.repositories.Door.DoorRepository;
 import com.bit.final_project.services.DoorService;
@@ -24,4 +25,10 @@ public class DoorServiceImpl implements DoorService {
     public List<Door> getDoorList(){
         return doorRepository.findAllByStatus(Status.ACTIVE);
     }
+
+    @Override
+    public Door getDoorById(String id) {
+        return doorRepository.findById(id).orElseThrow(()-> new EntityExistsException("Door not found with id: " + id));
+    }
+
 }

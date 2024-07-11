@@ -4,7 +4,10 @@ import com.bit.final_project.commons.Generator;
 import com.bit.final_project.commons.storage.model.AppFile;
 import com.bit.final_project.commons.storage.service.FilesStorageService;
 import com.bit.final_project.dto.UserDto;
+import com.bit.final_project.enums.Status;
+import com.bit.final_project.enums.UserRole;
 import com.bit.final_project.exceptions.UserNotFoundException;
+import com.bit.final_project.exceptions.http.EntityExistsException;
 import com.bit.final_project.exceptions.http.UnauthorizeException;
 import com.bit.final_project.models.User;
 import com.bit.final_project.repositories.User.UserRepository;
@@ -35,9 +38,9 @@ public class UserServiceImpl implements UserService {
         if(user == null || !passwordEncoder.matches(request.getPassword(),user.getPassword())){
             throw new UnauthorizeException("INVALID_CREDENTIALS","Login credentials are invalid");
         }
-//        if(!user.getStatus().equals(User.Status.ACTIVE)){
-//            throw  new UnauthorizeException("You Account Is Deactivated.Please Contact HR");
-//        }
+        else if(!user.getStatus().equals(Status.ACTIVE)){
+            throw  new UnauthorizeException("You Account Is Deactivated.Please Contact HR");
+        }
 
         return user;
 
@@ -46,6 +49,7 @@ public class UserServiceImpl implements UserService {
         log.info("User Login loginId = {}",request.getEmail());
         User user = new User();
         user.setId(Generator.getUUID());
+        user.setUser_role(UserRole.CUSTOMER);
         user.setFirst_name(request.getFirstName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -72,5 +76,14 @@ public class UserServiceImpl implements UserService {
         AppFile saveEmployeeImage=filesStorageService.save(image);
         log.info("User Login loginId =",saveEmployeeImage);
         return "service worked";
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if(user==null){
+            throw new UserNotFoundException("Bad Request","user not found for email = "+email);
+        }
+        return user;
     }
 }

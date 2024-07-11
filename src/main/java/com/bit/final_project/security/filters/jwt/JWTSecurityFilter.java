@@ -9,6 +9,7 @@ import com.bit.final_project.models.User;
 import com.bit.final_project.security.filters.CurrentUser;
 import com.bit.final_project.security.filters.UserHelper;
 import com.bit.final_project.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+@Slf4j
 public class JWTSecurityFilter extends BasicAuthenticationFilter {
     private Logger logger = LoggerFactory.getLogger(JWTSecurityFilter.class);
     private UserService userService;
@@ -37,6 +38,7 @@ public class JWTSecurityFilter extends BasicAuthenticationFilter {
             return;
         }
         token = token.replace("Bearer ","");
+        log.info("user token custom={}",token);
         try {
             JWTContent content = JWT.decode(token, JwtConfig.jwtKey);
             var userId = content.getPayload().get("userId");

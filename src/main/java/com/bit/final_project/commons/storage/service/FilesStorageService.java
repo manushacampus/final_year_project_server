@@ -12,6 +12,8 @@ public interface FilesStorageService {
     public File createFolder(AppFile file);
     public AppFile save(AppFile file);
     public ResponseEntity<byte[]> get(AppFile appFile) throws IOException;
+    public AppFile read(AppFile sFile);
 
     AppFile delete(AppFile appFile) throws IOException;
+
 }

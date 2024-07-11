@@ -1,5 +1,6 @@
 package com.bit.final_project.models;
 
+import com.bit.final_project.enums.PRODUCT_TYPE;
 import com.bit.final_project.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,8 @@ import javax.persistence.*;
 public class StockItem {
     @Id
     private String id;
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private PRODUCT_TYPE type;
     private String offer;
     private int qty;
     @Enumerated(EnumType.STRING)

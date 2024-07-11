@@ -1,6 +1,8 @@
 package com.bit.final_project.security.filters;
 
 import com.bit.final_project.exceptions.CustomException;
+import com.bit.final_project.exceptions.http.BaseException;
+import com.bit.final_project.exceptions.http.InternalErrorException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -11,24 +13,25 @@ import java.io.IOException;
 
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain){
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
 
         try {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
-        } catch (CustomException exp) {
+        } catch (BaseException exp) {
             exp.printStackTrace();
-//            logger.error("exception occurred error = {}", exp.getMessage());
+//            log.error("exception occurred error = {}", exp.getMessage());
             setErrorResponse(httpServletResponse, exp);
         } catch (Exception exp) {
             exp.printStackTrace();
-//            logger.error("exception occurred error = {}", exp.getMessage());
-            CustomException exception = new CustomException(CustomException.INTERNAL_SERVER_ERROR, exp.getMessage());
+//            log.error("exception occurred error = {}", exp.getMessage());
+            BaseException exception = new InternalErrorException(exp.getMessage());
             this.setErrorResponse(httpServletResponse, exception);
         }
     }
 
-    private void setErrorResponse(HttpServletResponse response, CustomException exp) {
-        response.setStatus(exp.getStatus().value());
+
+    private void setErrorResponse(HttpServletResponse response, BaseException exp) {
+        response.setStatus(exp.getCode().value());
         response.setContentType("application/json");
         try {
             String json = exp.getJsonAsString();

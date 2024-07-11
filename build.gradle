@@ -23,6 +23,9 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.thymeleaf:thymeleaf-spring5:3.0.11.RELEASE'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.4.1'
+
     implementation(group: 'org.apache.commons', name: 'commons-lang3', version: '3.10')
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.11.0'
     implementation 'org.springframework.boot:spring-boot-starter-security'

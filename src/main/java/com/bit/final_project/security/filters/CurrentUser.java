@@ -21,6 +21,7 @@ public class CurrentUser {
         return null;
     }
     public static void setUser(User user, String role){
+
         var authorityList = new ArrayList<GrantedAuthority>();
         authorityList.add(new SimpleGrantedAuthority(role));
         Authentication auth = new UsernamePasswordAuthenticationToken(user,null,authorityList);
