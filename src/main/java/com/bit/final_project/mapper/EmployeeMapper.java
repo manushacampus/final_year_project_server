@@ -13,7 +13,9 @@ public class EmployeeMapper {
         dto.setStatus(String.valueOf(employee.getStatus()));
         if (employee.getUser() != null) {
             dto.setUser(UserDto.init(employee.getUser())); // Make sure getUser() doesn't trigger lazy load exception
-            dto.getUser().setImage(URL.fileStorageUrl.replace("{type}","employee").replace("{fileName}",employee.getUser().getImage()));
+            if (employee.getUser().getImage()!=null) {
+                dto.getUser().setImage(URL.fileStorageUrl.replace("{type}", "employee").replace("{fileName}", employee.getUser().getImage()));
+            }
         }
         return dto;
     }

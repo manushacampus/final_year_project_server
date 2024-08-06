@@ -42,6 +42,9 @@ public class Job {
     @Column(name = "updated_at")
     private Instant updatedAt;
     @ManyToOne
+    @JoinColumn(name = "quotation", referencedColumnName = "id")
+    private Quotation quotation;
+    @ManyToOne
     @JoinColumn(name = "stock_id", referencedColumnName = "id")
     private StockItem stockItem;
 

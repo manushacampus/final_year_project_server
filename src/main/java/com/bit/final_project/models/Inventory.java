@@ -17,6 +17,7 @@ public class Inventory {
     private String id;
     private int qty;
     private int price;
+    private String code;
     @Enumerated(EnumType.STRING)
     private INVENTORY_TYPE inventoryType;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
