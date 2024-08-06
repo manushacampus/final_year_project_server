@@ -1,4 +1,4 @@
-name: Deploy to Azure VM
+name: CI
 
 on:
   push:
@@ -6,34 +6,45 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
     steps:
-    - name: Checkout Repository
+    - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
+    - name: Build Docker Image
+      run: |
+        docker build -t pasindu55/alumini-backend:latest .
+        docker tag pasindu55/alumini-backend:latest pasindu55/alumini-backend:${{ github.run_id }}
+
+    - name: Login to DockerHub
+      run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
+    - name: Push Docker Image to Registry
+      run: |
+        docker push pasindu55/alumini-backend:latest
+        
+
+    - name: Setup SSH Key
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
+        chmod 600 private_key.pem
+
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@v0.1.5
       with:
-        distribution: 'adopt'
-        java-version: '11'
-
-    - name: Build and Push Docker Image
-      env:
-        REGISTRY: ${{ secrets.AZURE_REGISTRY }}
-        USERNAME: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-        PASSWORD: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-      run: |
-        docker build -t $REGISTRY/your-image-name:latest .
-        echo $PASSWORD | docker login $REGISTRY -u $USERNAME --password-stdin
-        docker push $REGISTRY/your-image-name:latest
-
-    - name: SSH into Azure VM and Update Docker Container
-      run: |
-        ssh -o StrictHostKeyChecking=no -i ${{ secrets.AZURE_VM_SSH_KEY }} ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.AZURE_VM_IP }} 'bash -s' << 'ENDSSH'
-          docker pull $REGISTRY/your-image-name:latest
-          docker stop your-container-name || true
-          docker rm your-container-name || true
-          docker run -d --name your-container-name -p 8080:8080 $REGISTRY/your-image-name:latest
-        ENDSSH
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          docker pull pasindu55/alumini-backend:latest &&
+          if [ "$(docker ps -q -f name=farmer_app)" ]; then
+            docker stop farmer_app
+            docker rm farmer_app
+          fi &&
+          docker run -d --name alumini_back -p 8080:8080 pasindu55/alumini-backend:latest
