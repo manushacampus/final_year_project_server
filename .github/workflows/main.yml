@@ -44,7 +44,7 @@ jobs:
         script: |
           docker pull pasindu55/alumini-backend:latest &&
           if [ "$(docker ps -q -f name=farmer_app)" ]; then
-            docker stop farmer_app
-            docker rm farmer_app
+            docker stop alumini_back
+            docker rm alumini_back
           fi &&
           docker run -d --name alumini_back -p 8080:8080 pasindu55/alumini-backend:latest
