@@ -48,7 +48,18 @@ public class UserServiceImpl implements UserService {
     public  User register(UserDto request){
         log.info("User Login loginId = {}",request.getEmail());
         User user = new User();
-        user.setId(Generator.getUUID());
+        String uuid;
+        boolean isUnique = false;
+
+        while (!isUnique) {
+            uuid = Generator.getUUID();
+            if (!userRepository.existsById(uuid)) {
+                user.setId(uuid);
+                isUnique = true;
+            } else {
+               log.info("already have");
+            }
+        }
         user.setUser_role(UserRole.CUSTOMER);
         user.setFirst_name(request.getFirstName());
         user.setEmail(request.getEmail());

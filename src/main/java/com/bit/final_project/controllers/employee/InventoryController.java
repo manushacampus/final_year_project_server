@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("api/inventory")
+@RequestMapping("api/employee/inventory")
 @Slf4j
 public class InventoryController {
     @Autowired

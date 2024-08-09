@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/stock")
+@RequestMapping("api/employee/stock")
 @Slf4j
 public class StockController {
     @Autowired

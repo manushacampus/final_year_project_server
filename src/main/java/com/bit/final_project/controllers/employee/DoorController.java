@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/door")
+@RequestMapping("api/employee/door")
 @Slf4j
 public class DoorController {
 

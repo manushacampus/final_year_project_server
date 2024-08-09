@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/job")
+@RequestMapping("api/employee/job")
 @Slf4j
 public class JobController {
     @Autowired

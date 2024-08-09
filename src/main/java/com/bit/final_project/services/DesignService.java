@@ -19,4 +19,6 @@ public interface DesignService {
      Page<DesignDto> getALlDesignByStatusPage(String status,int page, int size);
 
      List<DesignInventory> getInventoryByDesign(String designId);
+
+     Design changeStatus(String status,String id);
 }

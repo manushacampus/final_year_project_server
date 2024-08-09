@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("api/bar-angles")
+@RequestMapping("api/employee/bar-angles")
 @Slf4j
 public class BarAnglesController {
     @Autowired

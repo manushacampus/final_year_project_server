@@ -89,4 +89,11 @@ public class DesignServiceImpl implements DesignService {
 
         return designInventoryRepository.findAllByDesign(getDesignById(designId));
     }
+
+    @Override
+    public Design changeStatus(String status,String id) {
+        Design design = getDesignById(id);
+        design.setStatus(Status.valueOf(status));
+        return designRepository.save(design);
+    }
 }
