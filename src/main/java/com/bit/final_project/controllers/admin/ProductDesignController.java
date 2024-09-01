@@ -1,12 +1,10 @@
-package com.bit.final_project.controllers.employee;
+package com.bit.final_project.controllers.admin;
 
 import com.bit.final_project.commons.JSON;
 import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.dto.DesignAndInventoryDto;
 import com.bit.final_project.dto.DesignRequestDto;
 import com.bit.final_project.dto.entityDto.DesignDto;
-import com.bit.final_project.enums.INVENTORY_TYPE;
-import com.bit.final_project.enums.Status;
 import com.bit.final_project.mapper.DesignInventoryMapper;
 import com.bit.final_project.mapper.DesignMapper;
 import com.bit.final_project.mapper.InventoryMapper;

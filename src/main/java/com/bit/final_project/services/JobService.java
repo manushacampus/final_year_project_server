@@ -32,4 +32,6 @@ public interface JobService {
 
     Job DoneTheJobByNew(String jobId);
     Job startTheJob(String jobId);
+
+    Job createJobForQuotation();
 }

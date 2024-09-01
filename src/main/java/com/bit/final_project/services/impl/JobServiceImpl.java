@@ -307,5 +307,11 @@ public class JobServiceImpl implements JobService {
         return jobRepository.save(job);
     }
 
+    @Override
+    public Job createJobForQuotation() {
+
+        return null;
+    }
+
 
 }

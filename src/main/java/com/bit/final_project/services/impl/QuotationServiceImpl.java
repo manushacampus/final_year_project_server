@@ -62,4 +62,11 @@ public class QuotationServiceImpl implements QuotationService {
             return quotationRepository.findAllByStatus(Status.valueOf(status));
         }
     }
+
+    @Override
+    public Quotation changeQuotationType(String id, String type) {
+        return null;
+    }
+
+
 }

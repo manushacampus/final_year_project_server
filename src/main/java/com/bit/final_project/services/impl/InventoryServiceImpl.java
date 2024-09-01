@@ -2,18 +2,20 @@ package com.bit.final_project.services.impl;
 
 import com.bit.final_project.commons.Generator;
 import com.bit.final_project.dto.BarInventoryDto;
+import com.bit.final_project.dto.BoardInventoryDto;
+import com.bit.final_project.dto.OtherInventoryDto;
 import com.bit.final_project.dto.entityDto.InventoryDto;
 import com.bit.final_project.enums.INVENTORY_TYPE;
 import com.bit.final_project.exceptions.http.EntityExistsException;
 import com.bit.final_project.mapper.InventoryMapper;
-import com.bit.final_project.models.Bar;
-import com.bit.final_project.models.BarAngles;
-import com.bit.final_project.models.Design;
-import com.bit.final_project.models.Inventory;
+import com.bit.final_project.models.*;
 import com.bit.final_project.repositories.Bar.BarRepository;
+import com.bit.final_project.repositories.Board.BoardRepository;
 import com.bit.final_project.repositories.Inventory.InventoryRepository;
+import com.bit.final_project.repositories.Other.OtherRepository;
 import com.bit.final_project.services.BarAnglesService;
 import com.bit.final_project.services.InventoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,13 +27,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class InventoryServiceImpl implements InventoryService {
     @Autowired
     BarRepository barRepository;
     @Autowired
+    BoardRepository boardRepository;
+    @Autowired
     InventoryRepository inventoryRepository;
     @Autowired
     BarAnglesService barAnglesService;
+    @Autowired
+    OtherRepository otherRepository;
 
     @Override
     public Inventory getInventoryById(String id) {
@@ -58,7 +65,7 @@ public class InventoryServiceImpl implements InventoryService {
             uuid = Generator.getUUID();
         } while (inventoryRepository.existsById(uuid));
         Inventory inventory= new Inventory();
-        inventory.setId(Generator.getUUID());
+        inventory.setId(uuid);
         inventory.setBar(barRes);
         inventory.setQty(request.getQty());
         inventory.setPrice(request.getPrice());
@@ -71,8 +78,63 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public Inventory createBoardInventory(BoardInventoryDto request) {
+        log.info("ssdsdsd={}",request.getDec());
+        String uuid;
+        Board board = new Board();
+        do {
+            uuid = Generator.getUUID();
+        } while (boardRepository.existsById(uuid));
+        board.setId(uuid);
+        board.setName(request.getName());
+        board.setHeight(request.getHeight());
+        board.setWidth(request.getWidth());
+        board.setWeight(request.getWeight());
+        board.setColor(request.getColor());
+        board.setType(request.getType());
+        board.setDescription(request.getDec());
+        Board responseBoard = boardRepository.save(board);
+        Inventory inventory= new Inventory();
+        do {
+            uuid = Generator.getUUID();
+        } while (inventoryRepository.existsById(uuid));
+        inventory.setId(uuid);
+        inventory.setCode(request.getCode());
+        inventory.setPrice(request.getPrice());
+        inventory.setBoard(responseBoard);
+        inventory.setInventoryType(INVENTORY_TYPE.BOARD);
+        return inventoryRepository.save(inventory);
+    }
+
+    @Override
+    public Inventory createOtherInventory(OtherInventoryDto request) {
+        log.info("create Other Inventory={}",request.getCode());
+        String uuid;
+        Other other = new Other();
+        do {
+            uuid = Generator.getUUID();
+        } while (otherRepository.existsById(uuid));
+        other.setId(uuid);
+        Other responseOther = otherRepository.save(other);
+        Inventory inventory= new Inventory();
+        do {
+            uuid = Generator.getUUID();
+        } while (inventoryRepository.existsById(uuid));
+        inventory.setId(uuid);
+        inventory.setCode(request.getCode());
+        inventory.setPrice(request.getPrice());
+        inventory.setOther(responseOther);
+        inventory.setInventoryType(INVENTORY_TYPE.OTHER);
+        return inventoryRepository.save(inventory);
+
+    }
+
+    @Override
     public Page<InventoryDto> getInventoryByType(INVENTORY_TYPE type, int page, int size) {
         Pageable pageableRequest = PageRequest.of(page,size);
+        if (type.equals(INVENTORY_TYPE.ALL)){
+            return inventoryRepository.findAll(pageableRequest).map(InventoryMapper::convertToDto);
+        }
         return inventoryRepository.findByInventoryType(pageableRequest,type).map(InventoryMapper::convertToDto);
     }
     @Override

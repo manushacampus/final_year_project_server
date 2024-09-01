@@ -17,6 +17,7 @@ public class StockItem {
     @Enumerated(EnumType.STRING)
     private PRODUCT_TYPE type;
     private String offer;
+    private Double price;
     private int qty;
     @Enumerated(EnumType.STRING)
     private Status status;

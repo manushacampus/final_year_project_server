@@ -10,4 +10,6 @@ public interface QuotationService {
     Quotation createDoorQuotation(DoorQuotationDto dto);
     Quotation createWindowQuotation(WindowQuotationDto dto);
     List<Quotation> getAllQuotationByStatus(String status);
+
+    Quotation changeQuotationType(String id,String type);
 }
