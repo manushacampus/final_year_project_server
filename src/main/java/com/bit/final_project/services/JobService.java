@@ -20,7 +20,7 @@ public interface JobService {
     Job deleteJobForDoor(String id,String progress);
     List<Job> getJobs();
     Page<JobDto> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size);
-    List<Job> getJobEmployeeByStatus(Status status, Employee employee,Progress progress);
+    List<JobDto> getJobEmployeeByStatus(Status status, Employee employee,Progress progress);
 
 //    List<JobEmployee> assignEmployeeJob(String jobId, Employee employee);
     Job getJobById(String id);
