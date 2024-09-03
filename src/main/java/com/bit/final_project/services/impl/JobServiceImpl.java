@@ -161,14 +161,14 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Page<Job> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size) {
+    public Page<JobDto> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size) {
         log.info("page={}",page);
         log.info("size={}",size);
         Pageable pageableRequest = PageRequest.of(page,size);
         if (progress.equals(Progress.ALL)){
-            return jobRepository.findByStatus(pageableRequest,status);
+            return jobRepository.findByStatus(pageableRequest,status).map(JobDto::init);
         }
-        return jobRepository.findByStatusAndProgress(pageableRequest,status,progress);
+        return jobRepository.findByStatusAndProgress(pageableRequest,status,progress).map(JobDto::init);
     }
 
     @Override

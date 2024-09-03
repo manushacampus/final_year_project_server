@@ -1,5 +1,6 @@
 package com.bit.final_project.dto.entityDto;
 
+import com.bit.final_project.commons.URL;
 import com.bit.final_project.models.Door;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,7 @@ public class DoorDto {
     private String boardThickness;
     private String glassThickness;
     private String status;
+    private String image;
     private Double price;
 
     public static DoorDto init(Door door){
@@ -31,6 +33,9 @@ public class DoorDto {
         doorDto.setCode(door.getCode());
         doorDto.setHeight(door.getHeight());
         doorDto.setWidth(door.getWidth());
+        if (door != null && door.getImage() != null && !door.getImage().isEmpty()) {
+            doorDto.setImage(URL.fileStorageUrl.replace("{type}", "product").replace("{fileName}", door.getImage()));
+        }
         return doorDto;
     }
 }

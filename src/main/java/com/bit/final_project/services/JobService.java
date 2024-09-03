@@ -19,7 +19,7 @@ public interface JobService {
     Job updateJobForDoor(JobDto jobDto, DoorDto doorDto);
     Job deleteJobForDoor(String id,String progress);
     List<Job> getJobs();
-    Page<Job> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size);
+    Page<JobDto> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size);
     List<Job> getJobEmployeeByStatus(Status status, Employee employee);
 
 //    List<JobEmployee> assignEmployeeJob(String jobId, Employee employee);
