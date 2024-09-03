@@ -79,12 +79,12 @@ public class JobController {
         );
     }
     @GetMapping("/employee")
-    public ResponseEntity<StandardResponse> getJobListByStatusAndEmployee(@RequestParam("status") String status){
+    public ResponseEntity<StandardResponse> getJobListByStatusAndEmployee(@RequestParam("status") String status,@RequestParam("progress") String progress){
         log.info("status={}",Status.valueOf(status));
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),
                         "success",
-                        jobService.getJobEmployeeByStatus(Status.valueOf(status),employeeService.getEmployeeById(CurrentUser.getUser().getId())).stream().map(JobDto::init).collect(Collectors.toList())),
+                        jobService.getJobEmployeeByStatus(Status.valueOf(status),employeeService.getEmployeeById(CurrentUser.getUser().getId()),Progress.valueOf(progress)).stream().map(JobDto::init).collect(Collectors.toList())),
                 HttpStatus.OK
         );
     }
