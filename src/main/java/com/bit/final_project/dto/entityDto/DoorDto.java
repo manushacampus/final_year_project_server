@@ -36,6 +36,9 @@ public class DoorDto {
         if (door != null && door.getImage() != null && !door.getImage().isEmpty()) {
             doorDto.setImage(URL.fileStorageUrl.replace("{type}", "product").replace("{fileName}", door.getImage()));
         }
+        else {
+            doorDto.setImage(URL.fileStorageUrl.replace("{type}", "default").replace("{fileName}", "No_Image_Available.jpg"));
+        }
         return doorDto;
     }
 }
