@@ -38,7 +38,7 @@ public class JobController {
     @GetMapping("/{id}")
     public ResponseEntity<StandardResponse> getJobById(@PathVariable("id") String id){
         return new ResponseEntity<>(
-                new StandardResponse(HttpStatus.OK.value(),"success",getJobById(id)),HttpStatus.OK
+                new StandardResponse(HttpStatus.OK.value(),"success",jobService.getJobById(id)),HttpStatus.OK
         );
     }
     @PostMapping("/door")
