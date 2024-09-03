@@ -172,15 +172,15 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobDto> getJobEmployeeByStatus(Status status, Employee employee,Progress progress) {
+    public List<Job> getJobEmployeeByStatus(Status status, Employee employee,Progress progress) {
         log.info("service status={}",status);
         log.info("service employee={}",employee.getUser_id());
         List<JobEmployee> e= jobEmployeeRepository.findAllByStatusAndEmployee(status,employee);
-        List<JobDto> jobList = new ArrayList<>();
+        List<Job> jobList = new ArrayList<>();
         for (JobEmployee jobEmployee : e) {
             log.info("list={}",jobEmployee.getJob().getQty());
             if (jobEmployee.getJob().getProgress().equals(progress)) {
-                jobList.add(JobDto.init(jobEmployee.getJob()));
+                jobList.add(jobEmployee.getJob());
             }
         }
         return jobList;
