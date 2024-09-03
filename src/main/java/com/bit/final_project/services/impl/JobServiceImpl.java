@@ -179,6 +179,9 @@ public class JobServiceImpl implements JobService {
         List<Job> jobList = new ArrayList<>();
         for (JobEmployee jobEmployee : e) {
             log.info("list={}",jobEmployee.getJob().getQty());
+            if (Progress.ALL.equals(progress)){
+                jobList.add(jobEmployee.getJob());
+            }
             if (jobEmployee.getJob().getProgress().equals(progress)) {
                 jobList.add(jobEmployee.getJob());
             }
