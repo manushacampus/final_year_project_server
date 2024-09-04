@@ -8,14 +8,14 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class AppConfig {
     public String environment;
-    @Value("local")
+    @Value("${app.environment}")
     public void setEnvironment(String environment){
         this.environment=environment;
         log.info("Environment={}",environment);
     }
 
     public static String base_url;
-    @Value("http://localhost:8080")
+    @Value("${app.base_url}")
     public void setBaseURL(String base_url){
         this.base_url=base_url;
         log.info("BaseUrl={}",base_url);

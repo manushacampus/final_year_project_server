@@ -161,25 +161,30 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Page<Job> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size) {
+    public Page<JobDto> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size) {
         log.info("page={}",page);
         log.info("size={}",size);
         Pageable pageableRequest = PageRequest.of(page,size);
         if (progress.equals(Progress.ALL)){
-            return jobRepository.findByStatus(pageableRequest,status);
+            return jobRepository.findByStatus(pageableRequest,status).map(JobDto::init);
         }
-        return jobRepository.findByStatusAndProgress(pageableRequest,status,progress);
+        return jobRepository.findByStatusAndProgress(pageableRequest,status,progress).map(JobDto::init);
     }
 
     @Override
-    public List<Job> getJobEmployeeByStatus(Status status, Employee employee) {
+    public List<Job> getJobEmployeeByStatus(Status status, Employee employee,Progress progress) {
         log.info("service status={}",status);
         log.info("service employee={}",employee.getUser_id());
         List<JobEmployee> e= jobEmployeeRepository.findAllByStatusAndEmployee(status,employee);
         List<Job> jobList = new ArrayList<>();
         for (JobEmployee jobEmployee : e) {
             log.info("list={}",jobEmployee.getJob().getQty());
-            jobList.add(jobEmployee.getJob());
+            if (Progress.ALL.equals(progress)){
+                jobList.add(jobEmployee.getJob());
+            }
+            if (jobEmployee.getJob().getProgress().equals(progress)) {
+                jobList.add(jobEmployee.getJob());
+            }
         }
         return jobList;
     }
@@ -305,6 +310,12 @@ public class JobServiceImpl implements JobService {
         Job job = getJobById(jobId);
         job.setProgress(Progress.PROCESSING);
         return jobRepository.save(job);
+    }
+
+    @Override
+    public Job createJobForQuotation() {
+
+        return null;
     }
 
 

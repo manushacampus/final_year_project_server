@@ -1,11 +1,9 @@
-package com.bit.final_project.controllers.employee;
+package com.bit.final_project.controllers.admin;
 
 import com.bit.final_project.commons.JSON;
 import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.dto.AddBarAnglesDto;
-import com.bit.final_project.dto.UserDto;
 import com.bit.final_project.dto.entityDto.BarAnglesDto;
-import com.bit.final_project.dto.entityDto.DoorDto;
 import com.bit.final_project.services.BarAnglesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("api/bar-angles")
+@RequestMapping("api/employee/bar-angles")
 @Slf4j
 public class BarAnglesController {
     @Autowired

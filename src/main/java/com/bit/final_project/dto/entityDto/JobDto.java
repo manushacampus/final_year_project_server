@@ -33,6 +33,7 @@ public class JobDto {
         jobDto.setDescription(job.getDescription());
         jobDto.setDueDate(String.valueOf(job.getDueDate()));
         jobDto.setQty(job.getQty());
+        jobDto.setStatus(String.valueOf(job.getStatus()));
 //        jobDto.setCreateBy(EmployeeDto.init(job.getCreateBy()));
 
         return jobDto;

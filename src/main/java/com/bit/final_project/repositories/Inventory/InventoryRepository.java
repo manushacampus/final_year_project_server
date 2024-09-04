@@ -13,5 +13,6 @@ import java.util.List;
 public interface InventoryRepository extends JpaRepository<Inventory,String> {
 
     Page<Inventory> findByInventoryType(Pageable pageable, INVENTORY_TYPE type);
+    Page<Inventory> findAll(Pageable pageable);
     List<Inventory> findByInventoryTypeAndCode(INVENTORY_TYPE type,String code);
 }

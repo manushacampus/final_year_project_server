@@ -1,4 +1,4 @@
-package com.bit.final_project.controllers.employee;
+package com.bit.final_project.controllers.admin;
 
 import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.dto.entityDto.DoorDto;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/door")
+@RequestMapping("api/employee/door")
 @Slf4j
 public class DoorController {
 

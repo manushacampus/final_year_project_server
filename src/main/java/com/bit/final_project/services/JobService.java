@@ -19,8 +19,8 @@ public interface JobService {
     Job updateJobForDoor(JobDto jobDto, DoorDto doorDto);
     Job deleteJobForDoor(String id,String progress);
     List<Job> getJobs();
-    Page<Job> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size);
-    List<Job> getJobEmployeeByStatus(Status status, Employee employee);
+    Page<JobDto> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size);
+    List<Job> getJobEmployeeByStatus(Status status, Employee employee,Progress progress);
 
 //    List<JobEmployee> assignEmployeeJob(String jobId, Employee employee);
     Job getJobById(String id);
@@ -32,4 +32,6 @@ public interface JobService {
 
     Job DoneTheJobByNew(String jobId);
     Job startTheJob(String jobId);
+
+    Job createJobForQuotation();
 }

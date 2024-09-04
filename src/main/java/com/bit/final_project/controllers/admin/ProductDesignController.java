@@ -1,12 +1,10 @@
-package com.bit.final_project.controllers.employee;
+package com.bit.final_project.controllers.admin;
 
 import com.bit.final_project.commons.JSON;
 import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.dto.DesignAndInventoryDto;
 import com.bit.final_project.dto.DesignRequestDto;
 import com.bit.final_project.dto.entityDto.DesignDto;
-import com.bit.final_project.enums.INVENTORY_TYPE;
-import com.bit.final_project.enums.Status;
 import com.bit.final_project.mapper.DesignInventoryMapper;
 import com.bit.final_project.mapper.DesignMapper;
 import com.bit.final_project.mapper.InventoryMapper;
@@ -23,7 +21,7 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/product-design")
+@RequestMapping("api/employee/product-design")
 @Slf4j
 public class ProductDesignController {
     @Autowired
@@ -71,6 +69,15 @@ public class ProductDesignController {
     ResponseEntity<StandardResponse> getDesignById(@Param("@designId") String designId) {
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),"success", DesignMapper.convertToDTO(designService.getDesignById(designId))),HttpStatus.OK
+        );
+    }
+
+    @PostMapping(value = "/status")
+    public @ResponseBody
+    ResponseEntity<StandardResponse> changeStatus(@RequestParam("status") String status,
+                                                  @RequestParam("id") String id) {
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success",DesignMapper.convertToDTO(designService.changeStatus(status,id))),HttpStatus.OK
         );
     }
 

@@ -16,4 +16,12 @@ import javax.persistence.Table;
 public class Board {
     @Id
     private String id;
+    private String name;
+    private Double weight;
+    private Double height;
+    private Double width;
+    private String color;
+    private String type;
+    private String description;
+
 }

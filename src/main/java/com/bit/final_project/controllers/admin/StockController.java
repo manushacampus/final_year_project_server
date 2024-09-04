@@ -1,4 +1,4 @@
-package com.bit.final_project.controllers.employee;
+package com.bit.final_project.controllers.admin;
 
 import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.services.StockService;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/stock")
+@RequestMapping("api/employee/stock")
 @Slf4j
 public class StockController {
     @Autowired

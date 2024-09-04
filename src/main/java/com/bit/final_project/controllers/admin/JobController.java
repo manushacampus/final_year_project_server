@@ -1,4 +1,4 @@
-package com.bit.final_project.controllers.employee;
+package com.bit.final_project.controllers.admin;
 
 import com.bit.final_project.commons.JSON;
 import com.bit.final_project.commons.StandardResponse;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/job")
+@RequestMapping("api/employee/job")
 @Slf4j
 public class JobController {
     @Autowired
@@ -38,7 +38,7 @@ public class JobController {
     @GetMapping("/{id}")
     public ResponseEntity<StandardResponse> getJobById(@PathVariable("id") String id){
         return new ResponseEntity<>(
-                new StandardResponse(HttpStatus.OK.value(),"success",getJobById(id)),HttpStatus.OK
+                new StandardResponse(HttpStatus.OK.value(),"success",JobDto.init(jobService.getJobById(id))),HttpStatus.OK
         );
     }
     @PostMapping("/door")
@@ -79,12 +79,12 @@ public class JobController {
         );
     }
     @GetMapping("/employee")
-    public ResponseEntity<StandardResponse> getJobListByStatusAndEmployee(@RequestParam("status") String status){
+    public ResponseEntity<StandardResponse> getJobListByStatusAndEmployee(@RequestParam("status") String status,@RequestParam("progress") String progress){
         log.info("status={}",Status.valueOf(status));
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),
                         "success",
-                        jobService.getJobEmployeeByStatus(Status.valueOf(status),employeeService.getEmployeeById(CurrentUser.getUser().getId())).stream().map(JobDto::init).collect(Collectors.toList())),
+                        jobService.getJobEmployeeByStatus(Status.valueOf(status),employeeService.getEmployeeById(CurrentUser.getUser().getId()),Progress.valueOf(progress)).stream().map(JobDto::init).collect(Collectors.toList())),
                 HttpStatus.OK
         );
     }

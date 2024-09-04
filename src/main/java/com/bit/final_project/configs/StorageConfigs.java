@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class StorageConfigs {
-    public String folder_path;
+    public static String folder_path;
     @Value("${app.folder_path}")
     public void setFolder_path(String folder_path){
         this.folder_path=folder_path;

@@ -1,6 +1,9 @@
 package com.bit.final_project.security;
 
+import com.bit.final_project.enums.UserRole;
+import com.bit.final_project.security.filters.CustomAccessDeniedHandler;
 import com.bit.final_project.security.filters.ExceptionHandlerFilter;
+import com.bit.final_project.security.filters.UserHelper;
 import com.bit.final_project.security.filters.jwt.JWTAuthEntryHandler;
 import com.bit.final_project.security.filters.jwt.JWTSecurityFilter;
 import com.bit.final_project.services.UserService;
@@ -23,11 +26,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf().disable()
                     .antMatcher("/api/**")
                     .authorizeRequests()
-                    .antMatchers("/api/user/**","/api/file/{type}/{fileName}","/api/forget-password","api/customer/*").permitAll()
+                    .antMatchers("/api/user/**","/api/file/{type}/{fileName}","/api/forget-password").permitAll()
+                    .antMatchers("/api/customer/**").hasRole(UserRole.CUSTOMER.toString())
                     .antMatchers("/api/**").authenticated()
                     .and()
                     .antMatcher("/api/**").exceptionHandling()
                     .authenticationEntryPoint(new JWTAuthEntryHandler())
+                    .accessDeniedHandler(new CustomAccessDeniedHandler())
                     .and()
                     .addFilter(new JWTSecurityFilter(authenticationManager(),this.userService))
                     .addFilterBefore(new ExceptionHandlerFilter(),JWTSecurityFilter.class);
