@@ -20,6 +20,11 @@ public class SupplierServiceImpl implements SupplierService {
     SupplierRepository supplierRepository;
 
     @Override
+    public Supplier getSupplierById(String id) {
+        return null;
+    }
+
+    @Override
     public Supplier saveSupplier(SupplierDto request) {
         Supplier supplier = new Supplier();
         supplier.setId(Generator.getUUID());
