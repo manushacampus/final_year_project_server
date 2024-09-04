@@ -2,7 +2,10 @@ package com.bit.final_project.commons.storage.service.impl;
 
 import com.bit.final_project.commons.storage.model.AppFile;
 import com.bit.final_project.commons.storage.service.FilesStorageService;
+import com.bit.final_project.component.AppComponent;
+import com.bit.final_project.configs.AppConfig;
 import com.bit.final_project.configs.GlobalConfigs;
+import com.bit.final_project.configs.StorageConfigs;
 import com.bit.final_project.exceptions.UserNotFoundException;
 import com.bit.final_project.exceptions.http.BadRequestException;
 import lombok.Getter;
@@ -88,7 +91,7 @@ public class LocalFileStorage implements FilesStorageService{
     public AppFile read(AppFile sFile) {
         String key = sFile.getRelativePathAsString();
         log.info("local storage read file path key = {}", key);
-        String filePath = "E:/FinalProjectStorage" + "/" + key;
+        String filePath = StorageConfigs.folder_path + "/" + key;
         log.info("local storage read file path = {}", filePath);
         File file = new File(filePath);
         try {

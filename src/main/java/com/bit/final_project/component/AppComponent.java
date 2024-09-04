@@ -15,15 +15,14 @@ public class AppComponent {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
-    @Autowired
-    StorageConfigs storageConfigs;
+
     @Bean
     public LocalFileStorage storageService() {
 
 //        if(storageConfigs.getStorageType().equals(StorageConfigs.STORAGE_TYPE)){
             GlobalConfigs configs = new GlobalConfigs();
 //            configs.setHomeDir(System.getenv("TRAVEL_PASS_FOLDER_PATH"));
-        configs.setHomeDir(storageConfigs.getFolder_path());
+        configs.setHomeDir(StorageConfigs.folder_path);
             var localStorage = new LocalFileStorage(configs);
             localStorage.setup();
             return localStorage;

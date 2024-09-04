@@ -1,11 +1,10 @@
 package com.bit.final_project.models;
 
+import com.bit.final_project.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "supplier")
@@ -20,5 +19,7 @@ public class Supplier {
     private String supplier_type;
     private String email;
     private String contact;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 }
