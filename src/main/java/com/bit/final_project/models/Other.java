@@ -19,4 +19,11 @@ public class Other {
     private String type;
     @Enumerated(EnumType.STRING)
     private Status status;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "supplier_id", referencedColumnName = "id")
+    private Supplier supplier;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "inventory_id", referencedColumnName = "id")
+    private Inventory inventory;
+
 }

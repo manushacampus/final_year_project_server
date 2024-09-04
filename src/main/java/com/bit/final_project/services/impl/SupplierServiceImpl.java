@@ -4,6 +4,7 @@ import com.bit.final_project.commons.Generator;
 import com.bit.final_project.dto.entityDto.SupplierDto;
 import com.bit.final_project.enums.PRODUCT_TYPE;
 import com.bit.final_project.enums.Status;
+import com.bit.final_project.exceptions.http.EntityExistsException;
 import com.bit.final_project.models.StockItem;
 import com.bit.final_project.models.Supplier;
 import com.bit.final_project.repositories.Supplier.SupplierRepository;
@@ -18,6 +19,12 @@ import org.springframework.stereotype.Service;
 public class SupplierServiceImpl implements SupplierService {
     @Autowired
     SupplierRepository supplierRepository;
+
+    @Override
+    public Supplier getSupplierbyId(String id) {
+
+        return supplierRepository.findById(id).orElseThrow(()-> new EntityExistsException("Supplier not found with id: " + id));
+    }
 
     @Override
     public Supplier saveSupplier(SupplierDto request) {
