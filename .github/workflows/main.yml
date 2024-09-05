@@ -17,9 +17,10 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build Docker Image
-      run:      
-        docker build -t pasindu55/alumini-backend:latest .
-        docker tag pasindu55/alumini-backend:latest pasindu55/alumini-backend:${{ github.run_id }}
+      run: |
+        docker build -t  pasindu55/alumini-backend:latest .
+        docker tag pasindu55/alumini-backend:latest  pasindu55/alumini-backend:${{ github.run_id }}
+
 
     - name: Login to DockerHub
       run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
