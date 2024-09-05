@@ -15,8 +15,14 @@ import javax.persistence.*;
 public class Purchase {
     @Id
     private String id;
-    private String qty;
+    private int qty;
     @Enumerated(EnumType.STRING)
     private Status status;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "supplier_id", referencedColumnName = "id")
+    private Supplier supplier;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "inventory_id", referencedColumnName = "id")
+    private Inventory inventory;
 
 }

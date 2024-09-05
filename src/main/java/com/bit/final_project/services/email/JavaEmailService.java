@@ -45,4 +45,12 @@ private EmailConfig emailConfig;
         sendEmail(to,subject,htmlBody);
     }
 
+    @Override
+    public void sendPurchaseRequest(String to, String subject, Map<String, Object> templateModel) throws MessagingException {
+        Context thymeleafContext = new Context();
+        thymeleafContext.setVariables(templateModel);
+        String htmlBody= viewResolverConfig.templateEngine().process("inventoryRequest.html",thymeleafContext);
+        sendEmail(to,subject,htmlBody);
+    }
+
 }
