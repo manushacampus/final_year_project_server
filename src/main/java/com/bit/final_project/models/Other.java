@@ -19,4 +19,6 @@ public class Other {
     private String type;
     @Enumerated(EnumType.STRING)
     private Status status;
+
+
 }

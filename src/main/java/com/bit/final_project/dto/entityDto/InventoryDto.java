@@ -9,6 +9,7 @@ public class InventoryDto {
     private String id;
     private int qty;
     private int price;
+    private String code;
     private String inventoryType;
     private BarDto bar;
     private BoardDto board;

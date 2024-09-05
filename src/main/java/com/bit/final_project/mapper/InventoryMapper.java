@@ -10,6 +10,7 @@ public class InventoryMapper {
     public static InventoryDto convertToDto(Inventory inventory){
         InventoryDto inventoryDto = new InventoryDto();
         inventoryDto.setId(inventory.getId());
+        inventoryDto.setCode(inventory.getCode());
         inventoryDto.setQty(inventory.getQty());
         inventoryDto.setPrice(inventory.getPrice());
         inventoryDto.setInventoryType(String.valueOf(inventory.getInventoryType()));

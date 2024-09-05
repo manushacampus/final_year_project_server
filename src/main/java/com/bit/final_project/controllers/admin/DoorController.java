@@ -2,6 +2,7 @@ package com.bit.final_project.controllers.admin;
 
 import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.dto.entityDto.DoorDto;
+import com.bit.final_project.dto.entityDto.JobDto;
 import com.bit.final_project.services.DoorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,11 @@ public class DoorController {
         doorService.createDoor(doorDto);
         return "Success";
     }
-    @GetMapping()
-    public ResponseEntity<StandardResponse> getDoorList(){
+    @GetMapping("/{id}")
+    public ResponseEntity<StandardResponse> getDoorById(@PathVariable("id") String id){
         return new ResponseEntity<>(
-                new StandardResponse(HttpStatus.OK.value(),"success",doorService.getDoorList()),HttpStatus.OK
+                new StandardResponse(HttpStatus.OK.value(),"success", DoorDto.init(doorService.getDoorById(id))),HttpStatus.OK
         );
     }
+
 }
