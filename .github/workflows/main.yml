@@ -18,6 +18,10 @@ jobs:
 
     - name: Build Docker Image
       run: |
+    
+        docker cp FinalProjectStorage alumini_back:/app/FinalProjectStorage
+
+          
         docker build -t pasindu55/alumini-backend:latest .
         docker tag pasindu55/alumini-backend:latest pasindu55/alumini-backend:${{ github.run_id }}
 
@@ -28,7 +32,6 @@ jobs:
       run: |
         docker push pasindu55/alumini-backend:latest
         
-
     - name: Setup SSH Key
       run: |
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
@@ -41,9 +44,20 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          docker pull pasindu55/alumini-backend:latest &&
-          if [ "$(docker ps -q -f name=farmer_app)" ]; then
+          # Pull the latest Docker image
+          docker pull pasindu55/alumini-backend:latest
+          
+          # Stop and remove the existing container if it is running
+          if [ "$(docker ps -q -f name=alumini_back)" ]; then
             docker stop alumini_back
             docker rm alumini_back
-          fi &&
+          fi
+          
+          # Run the new container
           docker run -d --name alumini_back -p 8080:8080 pasindu55/alumini-backend:latest
+          
+          # Copy the FinalProjectStorage folder into the running container
+          docker cp /tmp/FinalProjectStorage alumini_back:/app/FinalProjectStorage
+          
+          # Verify the folder is copied correctly
+          docker exec -it alumini_back ls /app
