@@ -1,13 +1,7 @@
 package com.bit.final_project.dto.entityDto;
 
-import com.bit.final_project.dto.EmployeeDto;
-import com.bit.final_project.dto.StockItemDto;
-import com.bit.final_project.models.Employee;
 import com.bit.final_project.models.Job;
 import lombok.Data;
-import org.joda.time.DateTime;
-
-import java.time.LocalDate;
 
 @Data
 public class JobDto {

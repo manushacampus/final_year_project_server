@@ -13,6 +13,6 @@ public class BoardInventoryDto {
     private String type;
     private String dec;
     private int qty;
-    private int price;
+    private Double price;
     private String code;
 }

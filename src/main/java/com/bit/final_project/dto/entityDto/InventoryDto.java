@@ -8,7 +8,10 @@ public class InventoryDto {
 
     private String id;
     private int qty;
-    private int price;
+    private Double price;
+    private String color;
+    private Double length;
+    private Double  weight;
     private String code;
     private String inventoryType;
     private BarDto bar;

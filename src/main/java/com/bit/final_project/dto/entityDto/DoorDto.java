@@ -14,6 +14,7 @@ public class DoorDto {
     private String code;
     private String height;
     private String width;
+    private String colorType;
     private String type;
     private String doorColor;
     private String fillingType;

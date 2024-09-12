@@ -1,10 +1,7 @@
 package com.bit.final_project.models;
 import com.bit.final_project.commons.Generator;
 import com.bit.final_project.dto.entityDto.DoorDto;
-import com.bit.final_project.enums.DoorFillingType;
-import com.bit.final_project.enums.DoorType;
-import com.bit.final_project.enums.Status;
-import com.bit.final_project.enums.TypeOfBoard;
+import com.bit.final_project.enums.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +23,9 @@ public class Door {
     private String image;
     @Enumerated(EnumType.STRING)
     private DoorType type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "color_type")
+    private ColorType colorType;
     @Column(name = "door_color")
     private String doorColor;
     @Enumerated(EnumType.STRING)

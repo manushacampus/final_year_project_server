@@ -17,7 +17,7 @@ public class Inventory {
     @Id
     private String id;
     private int qty;
-    private int price;
+    private Double price;
     private String code;
     @Enumerated(EnumType.STRING)
     private Status status;

@@ -3,7 +3,9 @@ package com.bit.final_project.services.impl;
 import com.bit.final_project.commons.Generator;
 import com.bit.final_project.commons.storage.model.AppFile;
 import com.bit.final_project.commons.storage.service.FilesStorageService;
+import com.bit.final_project.dto.DesignAndInventoryDto;
 import com.bit.final_project.dto.entityDto.DesignDto;
+import com.bit.final_project.enums.HeightOrWidth;
 import com.bit.final_project.enums.Status;
 import com.bit.final_project.exceptions.http.BadRequestException;
 import com.bit.final_project.exceptions.http.EntityExistsException;
@@ -45,6 +47,11 @@ public class DesignServiceImpl implements DesignService {
     }
 
     @Override
+    public DesignInventory getDesignInventoryById(String id) {
+        return designInventoryRepository.findById(id).orElseThrow(() -> new EntityExistsException("DesignInventory not found with id: " + id));
+    }
+
+    @Override
     public Design create(DesignDto designDto, MultipartFile image) throws IOException {
         if (image==null || image.isEmpty()){
             throw new BadRequestException("Product Design Image is empty!");
@@ -65,11 +72,15 @@ public class DesignServiceImpl implements DesignService {
     }
 
     @Override
-    public Inventory addInventoryForDesign(String designId, String inventoryId) {
-        Design design = getDesignById(designId);
-        Inventory inventory = inventoryService.getInventoryById(inventoryId);
+    public Inventory addInventoryForDesign(DesignAndInventoryDto request) {
+        Design design = getDesignById(request.getDesignId());
+        Inventory inventory = inventoryService.getInventoryById(request.getInventoryId());
         DesignInventory designInventory = new DesignInventory();
         designInventory.setId(Generator.getUUID());
+        if (!request.getType().isEmpty() || request.getType()!=""){
+            designInventory.setType(HeightOrWidth.valueOf(request.getType()));
+        }
+        designInventory.setQty(request.getQty());
         designInventory.setDesign(design);
         designInventory.setInventory(inventory);
         return designInventoryRepository.save(designInventory).getInventory();
@@ -88,6 +99,12 @@ public class DesignServiceImpl implements DesignService {
     public List<DesignInventory> getInventoryByDesign(String designId) {
 
         return designInventoryRepository.findAllByDesign(getDesignById(designId));
+    }
+    @Override
+    public DesignInventory deleteById(String id) {
+       DesignInventory designInventory = getDesignInventoryById(id);
+        designInventoryRepository.deleteById(id);
+        return designInventory;
     }
 
     @Override

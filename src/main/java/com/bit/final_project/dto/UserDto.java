@@ -5,9 +5,8 @@ import com.bit.final_project.enums.UserRole;
 import com.bit.final_project.models.User;
 import lombok.Getter;
 import lombok.Setter;
+import java.time.format.DateTimeFormatter;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 @Getter
 @Setter
@@ -36,11 +35,22 @@ public class UserDto {
         userDto.setEmail(user.getEmail());
         userDto.setGender(user.getGender());
         userDto.setNic(user.getNic());
-        userDto.setDob(user.getDob());
-        userDto.setRegisteredDate(user.getRegistered_date());
-        if (user != null && user.getImage() != null && !user.getImage().isEmpty()) {
-            userDto.setImage(URL.fileStorageUrl.replace("{type}", "employee").replace("{fileName}", user.getImage()));
+        if (user.getBirthday() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            userDto.setDob(user.getBirthday().format(formatter));
         }
+        userDto.setRegisteredDate(user.getRegistered_date());
+        if (user.getUser_role().equals(UserRole.EMPLOYEE)){
+            if (user != null && user.getImage() != null && !user.getImage().isEmpty()) {
+                userDto.setImage(URL.fileStorageUrl.replace("{type}", "employee").replace("{fileName}", user.getImage()));
+            }
+        }
+        if (user.getUser_role().equals(UserRole.CUSTOMER)){
+            if (user != null && user.getImage() != null && !user.getImage().isEmpty()) {
+                userDto.setImage(URL.fileStorageUrl.replace("{type}", "customer").replace("{fileName}", user.getImage()));
+            }
+        }
+
         userDto.setContact(user.getContact());
         userDto.setUserRole(String.valueOf(user.getUser_role()));
 

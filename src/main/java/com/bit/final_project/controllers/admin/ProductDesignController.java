@@ -8,6 +8,7 @@ import com.bit.final_project.dto.entityDto.DesignDto;
 import com.bit.final_project.mapper.DesignInventoryMapper;
 import com.bit.final_project.mapper.DesignMapper;
 import com.bit.final_project.mapper.InventoryMapper;
+import com.bit.final_project.mapper.QuotationMapper;
 import com.bit.final_project.services.DesignService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,15 @@ public class ProductDesignController {
     @Transactional
     public ResponseEntity<StandardResponse> addInventoryForDesign(@RequestBody DesignAndInventoryDto request) throws IOException {
         return new ResponseEntity<>(
-                new StandardResponse(HttpStatus.OK.value(),"success", InventoryMapper.convertToDto(designService.addInventoryForDesign(request.getDesignId(), request.getInventoryId()))),HttpStatus.OK
+                new StandardResponse(HttpStatus.OK.value(),"success", InventoryMapper.convertToDto(designService.addInventoryForDesign(request))),HttpStatus.OK
+        );
+    }
+    @DeleteMapping(value = "/delete/{id}")
+    public @ResponseBody
+    @Transactional
+    ResponseEntity<StandardResponse> deleteInventoryForDesign(@PathVariable("id") String id){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success", InventoryMapper.convertToDto(designService.deleteById(id).getInventory())),HttpStatus.OK
         );
     }
 

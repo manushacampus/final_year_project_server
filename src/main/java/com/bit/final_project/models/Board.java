@@ -20,6 +20,7 @@ public class Board {
     private Double weight;
     private Double height;
     private Double width;
+    private Double thickness;
     private String color;
     private String type;
     private String description;

@@ -4,6 +4,7 @@ import com.bit.final_project.commons.Generator;
 import com.bit.final_project.dto.UserDto;
 import com.bit.final_project.enums.Status;
 import com.bit.final_project.enums.UserRole;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,6 +12,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -27,7 +32,8 @@ public class User {
     private String password;
     private String gender;
     private String nic;
-    private String dob;
+    @Column(length = 100,columnDefinition = "DATE")
+    private LocalDate birthday;
     private String registered_date;
     private String image;
     private String contact;
@@ -51,7 +57,10 @@ public class User {
         user.setAddress(request.getAddress());
         user.setGender(request.getGender());
         user.setNic(request.getNic());
-        user.setDob(request.getDob());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        user.setBirthday(LocalDate.parse(request.getDob(),formatter));
+
         user.setRegistered_date(request.getRegisteredDate());
         user.setImage(request.getImage());
         user.setContact(request.getContact());

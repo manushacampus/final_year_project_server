@@ -6,7 +6,7 @@ import lombok.Data;
 public class BarInventoryDto {
     private String sectionNo;
     private String color;
-    private String length;
+    private Double length;
     private int qty;
-    private int price;
+    private Double price;
 }

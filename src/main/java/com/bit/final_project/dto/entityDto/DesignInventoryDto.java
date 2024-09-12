@@ -6,6 +6,8 @@ import lombok.Data;
 public class DesignInventoryDto {
 
     private String id;
+    private Double qty;
+    private String type;
     private DesignDto design;
     private  InventoryDto inventory;
 }

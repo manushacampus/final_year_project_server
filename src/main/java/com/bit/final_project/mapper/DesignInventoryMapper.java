@@ -3,6 +3,7 @@ package com.bit.final_project.mapper;
 import com.bit.final_project.dto.entityDto.BarDto;
 import com.bit.final_project.dto.entityDto.DesignInventoryDto;
 import com.bit.final_project.dto.entityDto.InventoryDto;
+import com.bit.final_project.enums.HeightOrWidth;
 import com.bit.final_project.models.DesignInventory;
 
 
@@ -17,6 +18,8 @@ public class DesignInventoryMapper {
         if (designInventory.getDesign() != null) {
             designInventoryDto.setDesign(DesignMapper.convertToDTO(designInventory.getDesign()));
         }
+        designInventoryDto.setType(String.valueOf(designInventory.getType()));
+        designInventoryDto.setQty(designInventory.getQty());
         return designInventoryDto;
     }
 }

@@ -14,8 +14,8 @@ import javax.persistence.*;
 public class DoorQuotation {
     @Id
     private String id;
-    private Long height;
-    private Long width;
+    private Double height;
+    private Double width;
     private String color;
     @ManyToOne
     @JoinColumn(name = "design")
