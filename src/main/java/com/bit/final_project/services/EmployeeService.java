@@ -23,4 +23,7 @@ public interface EmployeeService {
 
     Employee getEmployeeById(String id);
     Employee getEmployeeByUser(User user);
+    Employee updateProfilePic(MultipartFile file)throws IOException;
+
+    Employee updateProfile(EmployeeDto employeeDto);
 }

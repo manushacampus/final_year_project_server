@@ -88,6 +88,7 @@ public class CustomerServiceImpl implements CustomerService{
         );
         AppFile saveProductDesignImage=filesStorageService.save(appImage);
         user.setImage(saveProductDesignImage.getImageName());
+        userRepository.save(user);
         return customerResponse;
     }
 }

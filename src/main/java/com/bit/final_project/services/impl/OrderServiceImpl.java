@@ -3,6 +3,7 @@ package com.bit.final_project.services.impl;
 import com.bit.final_project.commons.Generator;
 import com.bit.final_project.dto.entityDto.OrderDto;
 import com.bit.final_project.dto.entityDto.StockItemDto;
+import com.bit.final_project.enums.OrderStatus;
 import com.bit.final_project.enums.PRODUCT_TYPE;
 import com.bit.final_project.enums.Status;
 import com.bit.final_project.mapper.OrderMapper;
@@ -84,5 +85,14 @@ public class OrderServiceImpl implements OrderService {
         Page<Order> order = orderRepository.findAllByCustomer(pageableRequest,customer);
         Page<OrderDto> orderDto = order.map(OrderMapper::convertToDTO);
         return orderDto;
+    }
+
+    @Override
+    public Page<OrderDto> getAllOrders(int page, int size, String status, String orderType) {
+        Pageable pageableRequest = PageRequest.of(page,size);
+        Page<Order> order = orderRepository.findAllByStatusAndType(pageableRequest,Status.valueOf(status), OrderStatus.valueOf(orderType));
+        Page<OrderDto> orderDto = order.map(OrderMapper::convertToDTO);
+        return orderDto;
+
     }
 }

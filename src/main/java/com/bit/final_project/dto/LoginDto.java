@@ -36,10 +36,10 @@ public class LoginDto {
         userDto.setEmail(user.getEmail());
         userDto.setGender(user.getGender());
         userDto.setNic(user.getNic());
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        userDto.setDob(user.getBirthday().format(formatter));
-
+        if (user.getBirthday() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            userDto.setDob(user.getBirthday().format(formatter));
+        }
         userDto.setRegisteredDate(user.getRegistered_date());
         if (user != null && user.getImage() != null && !user.getImage().isEmpty()) {
             userDto.setImage(URL.fileStorageUrl.replace("{type}","employee").replace("{fileName}",user.getImage()));

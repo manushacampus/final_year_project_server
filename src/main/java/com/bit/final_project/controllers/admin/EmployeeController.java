@@ -4,7 +4,9 @@ import com.bit.final_project.commons.JSON;
 import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.dto.EmployeeDto;
 import com.bit.final_project.dto.UserDto;
+import com.bit.final_project.dto.entityDto.CustomerDto;
 import com.bit.final_project.dto.registrationDto.EmployeeRegisterDto;
+import com.bit.final_project.mapper.CustomerMapper;
 import com.bit.final_project.security.filters.CurrentUser;
 import com.bit.final_project.services.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 
 @RestController
@@ -40,13 +44,29 @@ public class EmployeeController {
         );
 
     }
-    @GetMapping()
+    @GetMapping("/get")
     public @ResponseBody
     ResponseEntity<StandardResponse> getEmployeeById(){
         return new ResponseEntity<>(
-                new StandardResponse(HttpStatus.OK.value(),"success",CurrentUser.getUser()),HttpStatus.OK
+                new StandardResponse(HttpStatus.OK.value(),"success",EmployeeDto.init(employeeService.getEmployeeById(CurrentUser.getUser().getId()))),HttpStatus.OK
         );
 
+    }
+    @PutMapping("/update")
+    public @ResponseBody
+    ResponseEntity<StandardResponse> updateEmployee(@RequestBody EmployeeDto request){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success",EmployeeDto.init(employeeService.updateProfile(request))),HttpStatus.OK
+        );
+
+    }
+    @PutMapping("/image")
+    public @ResponseBody
+    @Transactional
+    ResponseEntity<StandardResponse> updateProfilePic(@RequestBody MultipartFile file) throws IOException {
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success", EmployeeDto.init(employeeService.updateProfilePic(file))),HttpStatus.OK
+        );
     }
     @PostMapping("/test1")
     public @ResponseBody

@@ -8,6 +8,8 @@ public class OrderMapper {
         OrderDto dto = new OrderDto();
         dto.setId(order.getId());
         dto.setTotal(order.getTotal());
+        dto.setStatus(String.valueOf(order.getStatus()));
+        dto.setOrderType(String.valueOf(order.getType()));
         if (order.getFeedback()!=null){
             dto.setFeedback(FeedbackMapper.convertToDTO(order.getFeedback()));
         }

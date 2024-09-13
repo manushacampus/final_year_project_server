@@ -13,4 +13,5 @@ public interface OrderService {
     Order orderProduct(String id,int qty);
     Order orderProductCart(List<Cart> cart);
     Page<OrderDto> getAllOrdersByCustomer(int page, int size, String status, String orderType);
+    Page<OrderDto> getAllOrders(int page, int size, String status, String orderType);
 }

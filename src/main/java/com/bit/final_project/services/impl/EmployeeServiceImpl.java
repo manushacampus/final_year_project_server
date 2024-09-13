@@ -11,11 +11,14 @@ import com.bit.final_project.enums.UserRole;
 import com.bit.final_project.exceptions.http.BadRequestException;
 import com.bit.final_project.exceptions.http.EntityExistsException;
 import com.bit.final_project.mapper.EmployeeMapper;
+import com.bit.final_project.models.Customer;
 import com.bit.final_project.models.Employee;
 import com.bit.final_project.models.User;
 import com.bit.final_project.repositories.Employee.EmployeeRepository;
 import com.bit.final_project.repositories.User.UserRepository;
+import com.bit.final_project.security.filters.CurrentUser;
 import com.bit.final_project.services.EmployeeService;
+import com.bit.final_project.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     PasswordEncoder passwordEncoder;
     @Autowired
     FilesStorageService filesStorageService;
+    @Autowired
+    UserService userService;
 
     @Transactional
     @Override
@@ -93,5 +98,30 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getEmployeeByUser(User user) {
         return employeeRepository.findByUser(user);
+    }
+    @Override
+    public Employee updateProfilePic(MultipartFile request) throws IOException {
+        User user = userService.getUserById(CurrentUser.getUser().getId());
+        if (request==null || request.isEmpty()){
+            throw new BadRequestException("Profile Image is empty!");
+        }
+        String extension= FilenameUtils.getExtension(request.getOriginalFilename());
+        AppFile appImage = new AppFile(
+                "employee",
+                Generator.getUUID(),
+                extension,
+                request.getInputStream()
+        );
+        AppFile saveProductDesignImage=filesStorageService.save(appImage);
+        user.setImage(saveProductDesignImage.getImageName());
+        userRepository.save(user);
+
+        return getEmployeeById(CurrentUser.getUser().getId());
+    }
+
+    @Override
+    public Employee updateProfile(EmployeeDto employeeDto) {
+        User user = CurrentUser.getUser();
+        return null;
     }
 }
