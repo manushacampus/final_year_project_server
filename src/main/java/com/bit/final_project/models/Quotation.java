@@ -1,6 +1,8 @@
 package com.bit.final_project.models;
 
+import com.bit.final_project.enums.CustomerOrderStatus;
 import com.bit.final_project.enums.DESIGN_TYPE;
+import com.bit.final_project.enums.OrderStatus;
 import com.bit.final_project.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +22,11 @@ public class Quotation {
     private String id;
     private Double total;
     private int qty;
+    @Column(name = "customer_status")
+    @Enumerated(EnumType.STRING)
+    private CustomerOrderStatus customerStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus progress;
     @CreationTimestamp
     private Instant created_at;
     @UpdateTimestamp

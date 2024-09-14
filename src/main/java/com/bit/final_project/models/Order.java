@@ -1,5 +1,6 @@
 package com.bit.final_project.models;
 
+import com.bit.final_project.enums.CustomerOrderStatus;
 import com.bit.final_project.enums.OrderStatus;
 import com.bit.final_project.enums.Progress;
 import com.bit.final_project.enums.Status;
@@ -25,6 +26,9 @@ public class Order {
     private Instant updated_at;
     @Enumerated(EnumType.STRING)
     private OrderStatus type;
+    @Column(name = "customer_status")
+    @Enumerated(EnumType.STRING)
+    private CustomerOrderStatus customerStatus;
     @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToOne
