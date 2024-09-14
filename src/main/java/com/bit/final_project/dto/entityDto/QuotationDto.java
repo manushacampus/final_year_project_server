@@ -11,6 +11,12 @@ public class QuotationDto {
 
     private String status;
 
+    private int qty;
+
+    private String createdAt;
+
+    private String updatedAt;
+
     private WindowQuotationDto windowQuotation;
 
     private DoorQuotationDto doorQuotation;

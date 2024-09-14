@@ -20,6 +20,7 @@ import com.bit.final_project.security.filters.CurrentUser;
 import com.bit.final_project.services.DesignService;
 import com.bit.final_project.services.DoorQuotationService;
 import com.bit.final_project.services.QuotationService;
+import com.bit.final_project.services.WindowQuotationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,8 @@ public class QuotationServiceImpl implements QuotationService {
     QuotationRepository quotationRepository;
     @Autowired
     DoorQuotationService doorQuotationService;
+    @Autowired
+    WindowQuotationService windowQuotationService;
     @Autowired
     CustomerRepository customerRepository;
     @Autowired
@@ -63,7 +66,19 @@ public class QuotationServiceImpl implements QuotationService {
 
     @Override
     public Quotation createWindowQuotation(WindowQuotationDto dto) {
-        return null;
+        Customer customer = customerRepository.findByUser(CurrentUser.getUser());
+        log.info("customer --------={}",customer.getUser_id());
+        if (customer == null) {
+            throw new EntityNotFoundException("Cannot place order: user not found");
+        }
+        Quotation quotation = new Quotation();
+        quotation.setId(Generator.getUUID());
+        quotation.setWindowQuotation(windowQuotationService.create(dto));
+        quotation.setQty(dto.getQty());
+        quotation.setType(DESIGN_TYPE.WINDOWS);
+        quotation.setStatus(Status.ACTIVE);
+        quotation.setCustomer(customer);
+        return quotationRepository.save(quotation);
     }
 
     @Override

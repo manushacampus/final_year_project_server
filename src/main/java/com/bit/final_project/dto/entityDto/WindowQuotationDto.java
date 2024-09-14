@@ -7,8 +7,9 @@ import lombok.Setter;
 @Setter
 public class WindowQuotationDto {
     private String id;
-    private Long height;
-    private Long width;
+    private Double height;
+    private Double width;
+    private int qty;
     private String color;
     private DesignDto design;
 }

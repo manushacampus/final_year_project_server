@@ -9,6 +9,7 @@ public class StockItemDto {
     private String type;
     private String offer;
     private String status;
+    private int qty;
     private Double price;
     private DoorDto door;
     private WindowDto windows;
@@ -20,6 +21,7 @@ public class StockItemDto {
         stockItemDto.setId(stockItem.getId());
         stockItemDto.setType(String.valueOf(stockItem.getType()));
         stockItemDto.setStatus(String.valueOf(stockItem.getStatus()));
+        stockItemDto.setQty(stockItem.getQty());
         if (stockItem.getDoor() != null) {
             stockItemDto.setDoor(DoorDto.init(stockItem.getDoor()));
         }

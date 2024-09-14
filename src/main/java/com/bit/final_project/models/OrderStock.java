@@ -12,6 +12,7 @@ import javax.persistence.*;
 public class OrderStock {
     @Id
     private String id;
+    private int qty;
     @ManyToOne
     @JoinColumn(name = "stock_id", referencedColumnName = "id")
     private StockItem stockItem;

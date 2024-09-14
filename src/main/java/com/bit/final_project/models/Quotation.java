@@ -5,8 +5,11 @@ import com.bit.final_project.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -15,6 +18,12 @@ import javax.persistence.*;
 public class Quotation {
     @Id
     private String id;
+    private Double total;
+    private int qty;
+    @CreationTimestamp
+    private Instant created_at;
+    @UpdateTimestamp
+    private Instant updated_at;
     @Enumerated(EnumType.STRING)
     private Status status;
     @Enumerated(EnumType.STRING)

@@ -4,6 +4,7 @@ import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.dto.entityDto.DoorDto;
 import com.bit.final_project.dto.entityDto.DoorQuotationDto;
 import com.bit.final_project.dto.entityDto.QuotationDto;
+import com.bit.final_project.dto.entityDto.WindowQuotationDto;
 import com.bit.final_project.mapper.QuotationMapper;
 import com.bit.final_project.services.DoorService;
 import com.bit.final_project.services.QuotationService;
@@ -30,6 +31,15 @@ public class CQuotationController {
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),"success", QuotationMapper.convertToDto(
                         quotationService.createDoorQuotation(doorDto))),HttpStatus.OK
+        );
+    }
+    @PostMapping("/window")
+    public @ResponseBody
+    @Transactional
+    ResponseEntity<StandardResponse> createWindowQuotation(@RequestBody WindowQuotationDto windowQuotationDto){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success", QuotationMapper.convertToDto(
+                        quotationService.createWindowQuotation(windowQuotationDto))),HttpStatus.OK
         );
     }
     @PostMapping(value = "/cal")

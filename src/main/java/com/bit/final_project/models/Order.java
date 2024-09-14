@@ -5,8 +5,11 @@ import com.bit.final_project.enums.Progress;
 import com.bit.final_project.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -16,6 +19,10 @@ public class Order {
     @Id
     private String id;
     private Double total;
+    @CreationTimestamp
+    private Instant created_at;
+    @UpdateTimestamp
+    private Instant updated_at;
     @Enumerated(EnumType.STRING)
     private OrderStatus type;
     @Enumerated(EnumType.STRING)

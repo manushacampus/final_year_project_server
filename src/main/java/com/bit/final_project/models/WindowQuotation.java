@@ -16,6 +16,9 @@ import javax.persistence.ManyToOne;
 public class WindowQuotation {
     @Id
     private String id;
+    private Double height;
+    private Double width;
+    private String color;
     @ManyToOne
     @JoinColumn(name = "design")
     private Design design;
