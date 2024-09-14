@@ -1,6 +1,5 @@
 package com.bit.final_project.dto.entityDto;
 import com.bit.final_project.dto.EmployeeDto;
-import com.bit.final_project.dto.WindowDto;
 import com.bit.final_project.models.*;
 import lombok.Data;
 
@@ -21,7 +20,14 @@ public class StockItemDto {
         stockItemDto.setId(stockItem.getId());
         stockItemDto.setType(String.valueOf(stockItem.getType()));
         stockItemDto.setStatus(String.valueOf(stockItem.getStatus()));
-        stockItemDto.setDoor(DoorDto.init(stockItem.getDoor()));
+        if (stockItem.getDoor() != null) {
+            stockItemDto.setDoor(DoorDto.init(stockItem.getDoor()));
+        }
+        if (stockItem.getWindows() != null) {
+            stockItemDto.setWindows(WindowDto.init(stockItem.getWindows()));
+        }
+
+
         stockItemDto.setPrice(stockItem.getPrice());
         return stockItemDto;
     }

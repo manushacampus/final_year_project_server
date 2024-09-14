@@ -3,8 +3,10 @@ package com.bit.final_project.controllers.admin;
 import com.bit.final_project.commons.JSON;
 import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.dto.JobDoorDto;
+import com.bit.final_project.dto.JobWindowDto;
 import com.bit.final_project.dto.entityDto.DoorDto;
 import com.bit.final_project.dto.entityDto.JobDto;
+import com.bit.final_project.dto.entityDto.WindowDto;
 import com.bit.final_project.enums.Progress;
 import com.bit.final_project.enums.Status;
 import com.bit.final_project.security.filters.CurrentUser;
@@ -47,6 +49,14 @@ public class JobController {
         DoorDto doorDTORequest= JSON.stringToObject(jobDoorDto.getDoorDto(),DoorDto.class);
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),"success",jobService.createJobForDoor(JobDTORequest,doorDTORequest)),HttpStatus.OK
+        );
+    }
+    @PostMapping("/window")
+    public ResponseEntity<StandardResponse> createJobWindow(@ModelAttribute JobWindowDto jobWindowDto){
+        JobDto JobDTORequest= JSON.stringToObject(jobWindowDto.getJobDto(),JobDto.class);
+        WindowDto windowDtoDTORequest= JSON.stringToObject(jobWindowDto.getWindowDto(), WindowDto.class);
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success",jobService.createJobForWindow(JobDTORequest,windowDtoDTORequest)),HttpStatus.OK
         );
     }
     @PutMapping("/door")

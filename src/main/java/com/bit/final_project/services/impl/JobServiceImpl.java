@@ -6,6 +6,7 @@ import com.bit.final_project.commons.storage.service.FilesStorageService;
 import com.bit.final_project.dto.entityDto.DoorDto;
 import com.bit.final_project.dto.entityDto.JobDto;
 import com.bit.final_project.dto.entityDto.JobEmployeeDto;
+import com.bit.final_project.dto.entityDto.WindowDto;
 import com.bit.final_project.enums.*;
 import com.bit.final_project.exceptions.http.BadRequestException;
 import com.bit.final_project.exceptions.http.EntityExistsException;
@@ -17,10 +18,7 @@ import com.bit.final_project.repositories.JobEmployee.JobEmployeeRepository;
 import com.bit.final_project.repositories.StockItem.StockItemRepository;
 import com.bit.final_project.repositories.Window.WindowRepository;
 import com.bit.final_project.security.filters.CurrentUser;
-import com.bit.final_project.services.DoorService;
-import com.bit.final_project.services.EmployeeService;
-import com.bit.final_project.services.JobService;
-import com.bit.final_project.services.StockService;
+import com.bit.final_project.services.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +55,8 @@ public class JobServiceImpl implements JobService {
     @Autowired
     DoorService doorService;
     @Autowired
+    WindowService windowService;
+    @Autowired
     EmployeeService employeeService;
     @Autowired
     FilesStorageService filesStorageService;
@@ -75,10 +75,46 @@ public class JobServiceImpl implements JobService {
         stockItem.setStatus(Status.INACTIVE);
         stockItem.setType(PRODUCT_TYPE.DOOR);
         stockItem.setQty(jobDto.getQty());
+        stockItem.setPrice(jobDto.getUnitPrice());
         stockItemRepository.save(stockItem);
         Job job = new Job();
         job.setId(Generator.getUUID());
         job.setType(PRODUCT_TYPE.DOOR);
+        job.setCreation_type(CREATION_TYPE.NEW);
+        job.setProgress(Progress.NEW);
+        job.setStatus(Status.ACTIVE);
+        job.setQty(jobDto.getQty());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (jobDto.getDueDate() != null && !jobDto.getDueDate().isEmpty()) {
+            job.setDueDate(LocalDate.parse(jobDto.getDueDate(), formatter));
+        }
+        job.setDescription(jobDto.getDescription());
+        job.setStockItem(stockItem);
+        Job jobResult = jobRepository.save(job);
+
+        return jobResult;
+    }
+
+    @Override
+    @Transactional
+    public Job createJobForWindow(JobDto jobDto, WindowDto windowDto) {
+        log.info("job={}",jobDto.getDueDate());
+        log.info("window={}",windowDto.getCode());
+        if (windowRepository.findByCode(windowDto.getCode())!=null){
+            throw new EntityExistsException("exists code");
+        }
+        Windows windowResult = windowRepository.save(Windows.init(windowDto));
+        StockItem stockItem = new StockItem();
+        stockItem.setId(Generator.getUUID());
+        stockItem.setWindows(windowResult);
+        stockItem.setStatus(Status.INACTIVE);
+        stockItem.setType(PRODUCT_TYPE.WINDOWS);
+        stockItem.setQty(jobDto.getQty());
+        stockItem.setPrice(jobDto.getUnitPrice());
+        stockItemRepository.save(stockItem);
+        Job job = new Job();
+        job.setId(Generator.getUUID());
+        job.setType(PRODUCT_TYPE.WINDOWS);
         job.setCreation_type(CREATION_TYPE.NEW);
         job.setProgress(Progress.NEW);
         job.setStatus(Status.ACTIVE);
@@ -247,7 +283,6 @@ public class JobServiceImpl implements JobService {
             }
             log.info("type={}",job.getCreation_type());
             log.info("type 2={}",job.getType());
-            if (job.getType().equals(PRODUCT_TYPE.DOOR)){
                 log.info("Doortype={}",job.getType());
                 String extension= FilenameUtils.getExtension(image.getOriginalFilename());
                 AppFile appImage = new AppFile(
@@ -257,14 +292,22 @@ public class JobServiceImpl implements JobService {
                         image.getInputStream()
                 );
                 AppFile saveProductImage=filesStorageService.save(appImage);
+            if (job.getType().equals(PRODUCT_TYPE.DOOR)) {
                 Door door = doorService.getDoorById(job.getStockItem().getDoor().getId());
                 door.setImage(saveProductImage.getImageName());
                 door.setStatus(Status.ACTIVE);
                 doorRepository.save(door);
+            }
+            if (job.getType().equals(PRODUCT_TYPE.WINDOWS)) {
+                Windows windows = windowService.getWindowById(job.getStockItem().getWindows().getId());
+                windows.setImage(saveProductImage.getImageName());
+                windows.setStatus(Status.ACTIVE);
+                windowRepository.save(windows);
+            }
                 StockItem stockItem = stockService.getStockItemById(job.getStockItem().getId());
                 stockItem.setStatus(Status.ACTIVE);
                 stockItemRepository.save(stockItem);
-            }
+
         }
         if (job.getCreation_type().equals(CREATION_TYPE.PRODUCT)){
             if (job.getType().equals(PRODUCT_TYPE.DOOR)){

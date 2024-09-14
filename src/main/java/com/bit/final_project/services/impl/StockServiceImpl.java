@@ -31,6 +31,9 @@ public class StockServiceImpl implements StockService {
             if (stockItem.getDoor() != null && stockItem.getDoor().getImage() != null) {
                 stockItem.getDoor().setImage(URL.fileStorageUrl.replace("{type}", "product").replace("{fileName}", stockItem.getDoor().getImage()));
             }
+            if (stockItem.getWindows() != null && stockItem.getWindows().getImage() != null) {
+                stockItem.getWindows().setImage(URL.fileStorageUrl.replace("{type}", "product").replace("{fileName}", stockItem.getWindows().getImage()));
+            }
         });
         return stockItems;
     }

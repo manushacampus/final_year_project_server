@@ -14,6 +14,7 @@ public class JobDto {
     private String dueDate;
     private String description;
     private int qty;
+    private Double unitPrice;
     private String status;
     private StockItemDto stockItem;
 

@@ -3,6 +3,7 @@ package com.bit.final_project.services;
 import com.bit.final_project.dto.entityDto.DoorDto;
 import com.bit.final_project.dto.entityDto.JobDto;
 import com.bit.final_project.dto.entityDto.JobEmployeeDto;
+import com.bit.final_project.dto.entityDto.WindowDto;
 import com.bit.final_project.enums.Progress;
 import com.bit.final_project.enums.Status;
 import com.bit.final_project.models.*;
@@ -15,6 +16,7 @@ import java.util.List;
 public interface JobService {
 
     Job createJobForDoor(JobDto jobDto, DoorDto doorDto);
+    Job createJobForWindow(JobDto jobDto, WindowDto windowDto);
 
     Job updateJobForDoor(JobDto jobDto, DoorDto doorDto);
     Job deleteJobForDoor(String id,String progress);
