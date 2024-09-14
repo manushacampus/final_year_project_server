@@ -1,14 +1,21 @@
 package com.bit.final_project.services.impl;
 
 import com.bit.final_project.commons.Generator;
+import com.bit.final_project.commons.storage.model.AppFile;
+import com.bit.final_project.commons.storage.service.FilesStorageService;
 import com.bit.final_project.dto.OrderCompleteDto;
 import com.bit.final_project.dto.OrderStockDto;
+import com.bit.final_project.dto.entityDto.CustomerDto;
 import com.bit.final_project.dto.entityDto.OrderDto;
+import com.bit.final_project.dto.entityDto.PaymentDto;
 import com.bit.final_project.dto.entityDto.StockItemDto;
 import com.bit.final_project.enums.OrderStatus;
 import com.bit.final_project.enums.PRODUCT_TYPE;
+import com.bit.final_project.enums.PaymentType;
 import com.bit.final_project.enums.Status;
+import com.bit.final_project.exceptions.http.BadRequestException;
 import com.bit.final_project.exceptions.http.EntityExistsException;
+import com.bit.final_project.mapper.CustomerMapper;
 import com.bit.final_project.mapper.OrderMapper;
 import com.bit.final_project.mapper.StockItemMapper;
 import com.bit.final_project.models.*;
@@ -17,17 +24,18 @@ import com.bit.final_project.repositories.Order.OrderRepository;
 import com.bit.final_project.repositories.OrderStock.OrderStockRepository;
 import com.bit.final_project.repositories.StockItem.StockItemRepository;
 import com.bit.final_project.security.filters.CurrentUser;
-import com.bit.final_project.services.CartService;
-import com.bit.final_project.services.OrderService;
-import com.bit.final_project.services.StockService;
+import com.bit.final_project.services.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +54,16 @@ public class OrderServiceImpl implements OrderService {
     CartService cartService;
     @Autowired
     StockService stockService;
+
+    @Autowired
+    PaymentService paymentService;
+
+    @Autowired
+    FilesStorageService filesStorageService;
+    @Autowired
+    QuotationService quotationService;
+    @Autowired
+    CustomerService customerService;
 
     @Override
     public Order getOrderById(String id) {
@@ -177,9 +195,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order completeOrder(String orderId,OrderCompleteDto request) {
+    public Order completeOrder(String orderId,OrderCompleteDto request) throws IOException {
+        log.info("Order Id--------------={}",request.getPrice());
         Order order = getOrderById(orderId);
-
+        PaymentDto paymentDto = new PaymentDto();
+        paymentDto.setOrder(OrderMapper.convertToDTO(order));
+        paymentDto.setPaymentType("COMPLETED");
+        paymentDto.setPrice(Double.valueOf(request.getPrice()));
+        paymentDto.setCustomer(CustomerMapper.convertToDTO(order.getCustomer()));
+        Payment payment = paymentService.createPayment(paymentDto,request.getInvoice());
+        if (payment!=null){
+            order.setPaymentStatus(PaymentType.COMPLETED);
+            order.setType(OrderStatus.COMPLETED);
+        }
         return orderRepository.save(order);
     }
 }

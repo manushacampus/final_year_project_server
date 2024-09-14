@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface CustomerService {
+    Customer getCustomerById(String id);
     Customer getCustomer();
 
     Customer updateCustomer(CustomerDto customer);

@@ -3,12 +3,13 @@ package com.bit.final_project.services;
 import com.bit.final_project.dto.OrderCompleteDto;
 import com.bit.final_project.dto.OrderStockDto;
 import com.bit.final_project.dto.entityDto.OrderDto;
-import com.bit.final_project.dto.entityDto.StockItemDto;
+
 import com.bit.final_project.models.Cart;
 import com.bit.final_project.models.Order;
-import com.bit.final_project.models.OrderStock;
+
 import org.springframework.data.domain.Page;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface OrderService {
@@ -23,5 +24,5 @@ public interface OrderService {
     Order acceptOrder(String orderId);
     Order deliverOrder(String orderId);
     Order deliveredOrder(String orderId);
-    Order completeOrder(String orderId,OrderCompleteDto request);
+    Order completeOrder(String orderId,OrderCompleteDto request) throws IOException;
 }

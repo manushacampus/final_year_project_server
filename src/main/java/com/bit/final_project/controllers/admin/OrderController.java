@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
+
 @RestController
 @RequestMapping("api/employee/order")
 @Slf4j
@@ -51,11 +54,12 @@ public class OrderController {
     @PutMapping("/delivered/{id}")
     public ResponseEntity<StandardResponse> deliveredOrder(@PathVariable("id") String id){
         return new ResponseEntity<>(
-                new StandardResponse(HttpStatus.OK.value(),"success", OrderMapper.convertToDTO(orderService.deliverOrder(id))),HttpStatus.OK
+                new StandardResponse(HttpStatus.OK.value(),"success", OrderMapper.convertToDTO(orderService.deliveredOrder(id))),HttpStatus.OK
         );
     }
     @PutMapping("/complete/{id}")
-    public ResponseEntity<StandardResponse> completeOrder(@PathVariable("id") String id,@ModelAttribute OrderCompleteDto request){
+    @Transactional
+    public ResponseEntity<StandardResponse> completeOrder(@PathVariable("id") String id,@ModelAttribute OrderCompleteDto request) throws IOException {
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),"success", OrderMapper.convertToDTO(orderService.completeOrder(id,request))),HttpStatus.OK
         );

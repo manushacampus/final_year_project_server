@@ -6,6 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class OrderCompleteDto {
     private String orderId;
-    private Double price;
+    private String price;
     private MultipartFile invoice;
 }

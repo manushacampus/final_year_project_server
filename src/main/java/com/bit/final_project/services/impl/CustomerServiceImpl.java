@@ -35,6 +35,12 @@ public class CustomerServiceImpl implements CustomerService{
     UserService userService;
     @Autowired
     FilesStorageService filesStorageService;
+
+    @Override
+    public Customer getCustomerById(String id) {
+        return customerRepository.findById(id).orElseThrow(() -> new EntityExistsException("Customer not found with id: " + id));
+    }
+
     @Override
     public Customer getCustomer() {
         Customer customer = customerRepository.findByUser(CurrentUser.getUser());

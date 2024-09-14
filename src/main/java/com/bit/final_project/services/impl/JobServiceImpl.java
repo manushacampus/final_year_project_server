@@ -224,19 +224,6 @@ public class JobServiceImpl implements JobService {
         }
         return jobList;
     }
-//    @Transactional
-//    @Override
-//    public List<JobEmployee> assignEmployeeJob(String jobId,Employee employee){
-//        Job job = jobRepository.findById(jobId).get();
-//        employeeList.forEach(user->{
-//            Employee employee = employeeRepository.findById(user).get();
-//            JobEmployee jobEmployee= new JobEmployee();
-//            jobEmployee.setJob(job);
-//            jobEmployee.setEmployee(employee);
-//            jobEmployeeRepository.save(jobEmployee);
-//        });
-//        return jobEmployeeRepository.findByJob(job);
-//    }
 
     @Override
     public Job getJobById(String id) {

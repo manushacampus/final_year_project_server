@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserProductController {
     @Autowired
     StockService stockService;
-    @Autowired
-    CartService cartService;
-    @Autowired
-    OrderService orderService;
+
+
     @GetMapping(params ={"page","size","status","type"})
     public @ResponseBody
     ResponseEntity<StandardResponse> getAllStockItemByStatusAndType(@Param("@page") int page,

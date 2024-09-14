@@ -16,7 +16,7 @@ public class Payment {
     @Id
     private String id;
     private String invoice;
-    private String price;
+    private Double price;
     @Column(name = "payment_type")
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
