@@ -1,6 +1,7 @@
 package com.bit.final_project.services.impl;
 
 import com.bit.final_project.commons.Generator;
+import com.bit.final_project.dto.OrderCompleteDto;
 import com.bit.final_project.dto.OrderStockDto;
 import com.bit.final_project.dto.entityDto.OrderDto;
 import com.bit.final_project.dto.entityDto.StockItemDto;
@@ -159,5 +160,26 @@ public class OrderServiceImpl implements OrderService {
             order.setType(OrderStatus.APPROVED);
             return orderRepository.save(order);
         }
+    }
+
+    @Override
+    public Order deliverOrder(String orderId) {
+        Order order = getOrderById(orderId);
+        order.setType(OrderStatus.DELIVER);
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public Order deliveredOrder(String orderId) {
+        Order order = getOrderById(orderId);
+        order.setType(OrderStatus.DELIVERED);
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public Order completeOrder(String orderId,OrderCompleteDto request) {
+        Order order = getOrderById(orderId);
+
+        return orderRepository.save(order);
     }
 }

@@ -1,6 +1,7 @@
 package com.bit.final_project.controllers.admin;
 
 import com.bit.final_project.commons.StandardResponse;
+import com.bit.final_project.dto.OrderCompleteDto;
 import com.bit.final_project.dto.entityDto.JobDto;
 import com.bit.final_project.dto.entityDto.OrderDto;
 import com.bit.final_project.mapper.OrderMapper;
@@ -39,6 +40,24 @@ public class OrderController {
     public ResponseEntity<StandardResponse> acceptOrder(@PathVariable("id") String id){
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),"success", OrderMapper.convertToDTO(orderService.acceptOrder(id))),HttpStatus.OK
+        );
+    }
+    @PutMapping("/deliver/{id}")
+    public ResponseEntity<StandardResponse> deliverOrder(@PathVariable("id") String id){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success", OrderMapper.convertToDTO(orderService.deliverOrder(id))),HttpStatus.OK
+        );
+    }
+    @PutMapping("/delivered/{id}")
+    public ResponseEntity<StandardResponse> deliveredOrder(@PathVariable("id") String id){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success", OrderMapper.convertToDTO(orderService.deliverOrder(id))),HttpStatus.OK
+        );
+    }
+    @PutMapping("/complete/{id}")
+    public ResponseEntity<StandardResponse> completeOrder(@PathVariable("id") String id,@ModelAttribute OrderCompleteDto request){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success", OrderMapper.convertToDTO(orderService.completeOrder(id,request))),HttpStatus.OK
         );
     }
 }

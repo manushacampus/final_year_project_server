@@ -1,9 +1,6 @@
 package com.bit.final_project.models;
 
-import com.bit.final_project.enums.CustomerOrderStatus;
-import com.bit.final_project.enums.OrderStatus;
-import com.bit.final_project.enums.Progress;
-import com.bit.final_project.enums.Status;
+import com.bit.final_project.enums.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,6 +23,9 @@ public class Order {
     private Instant updated_at;
     @Enumerated(EnumType.STRING)
     private OrderStatus type;
+    @Column(name = "payment_status")
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentStatus;
     @Column(name = "customer_status")
     @Enumerated(EnumType.STRING)
     private CustomerOrderStatus customerStatus;

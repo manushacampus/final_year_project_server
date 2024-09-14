@@ -1,9 +1,6 @@
 package com.bit.final_project.models;
 
-import com.bit.final_project.enums.CustomerOrderStatus;
-import com.bit.final_project.enums.DESIGN_TYPE;
-import com.bit.final_project.enums.OrderStatus;
-import com.bit.final_project.enums.Status;
+import com.bit.final_project.enums.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +19,9 @@ public class Quotation {
     private String id;
     private Double total;
     private int qty;
+    @Column(name = "payment_status")
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentStatus;
     @Column(name = "customer_status")
     @Enumerated(EnumType.STRING)
     private CustomerOrderStatus customerStatus;
