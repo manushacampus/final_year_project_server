@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Data
 public class EmployeeDto {
     private String user_id;
-    private BigDecimal salary;
+    private Double salary;
     private String designation;
     private String etf;
     private String type;

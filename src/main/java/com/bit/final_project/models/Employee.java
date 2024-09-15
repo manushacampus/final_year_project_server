@@ -16,7 +16,7 @@ public class Employee {
     @Id
     @Column(name = "user_id")
     private String user_id;
-    private BigDecimal salary;
+    private Double salary;
     @Enumerated(EnumType.STRING)
     private Designation designation;
     private String etf;
@@ -33,6 +33,7 @@ public class Employee {
         employee.setSalary(request.getSalary());
         employee.setDesignation(Designation.valueOf(request.getDesignation()));
         employee.setType(request.getType());
+        employee.setSalary(request.getSalary());
         employee.setStatus(Status.ACTIVE);
         return employee;
     }

@@ -46,9 +46,17 @@ public class EmployeeController {
     }
     @GetMapping("/get")
     public @ResponseBody
-    ResponseEntity<StandardResponse> getEmployeeById(){
+    ResponseEntity<StandardResponse> getEmployee(){
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),"success",EmployeeDto.init(employeeService.getEmployeeById(CurrentUser.getUser().getId()))),HttpStatus.OK
+        );
+
+    }
+    @GetMapping("/get/{id}")
+    public @ResponseBody
+    ResponseEntity<StandardResponse> getEmployeeById(@PathVariable("id") String id){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success",EmployeeDto.init(employeeService.getEmployeeById(id))),HttpStatus.OK
         );
 
     }
