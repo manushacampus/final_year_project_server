@@ -26,9 +26,9 @@ public interface QuotationService {
 
     Quotation approvedQuotation(String id);
 
-    Quotation deliverOrder(String orderId);
-    Quotation deliveredOrder(String orderId);
-    Quotation cancelOrder(String orderId);
-    Quotation completeOrder(String orderId, OrderCompleteDto request) throws IOException;
+    Quotation deliverOrder(String quotationId);
+    Quotation deliveredOrder(String quotationId);
+    Quotation cancelOrder(String quotationId);
+    Quotation completeOrder(String quotationId, OrderCompleteDto request) throws IOException;
 
 }
