@@ -21,7 +21,7 @@ public class Quotation {
     private int qty;
     @Column(name = "payment_status")
     @Enumerated(EnumType.STRING)
-    private PaymentType paymentStatus;
+    private PaymentStatus paymentStatus;
     @Column(name = "customer_status")
     @Enumerated(EnumType.STRING)
     private CustomerOrderStatus customerStatus;

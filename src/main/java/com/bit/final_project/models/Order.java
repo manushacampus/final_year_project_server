@@ -25,7 +25,7 @@ public class Order {
     private OrderStatus type;
     @Column(name = "payment_status")
     @Enumerated(EnumType.STRING)
-    private PaymentType paymentStatus;
+    private PaymentStatus paymentStatus;
     @Column(name = "customer_status")
     @Enumerated(EnumType.STRING)
     private CustomerOrderStatus customerStatus;

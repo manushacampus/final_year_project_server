@@ -57,6 +57,12 @@ public class OrderController {
                 new StandardResponse(HttpStatus.OK.value(),"success", OrderMapper.convertToDTO(orderService.deliveredOrder(id))),HttpStatus.OK
         );
     }
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<StandardResponse> cancelOrder(@PathVariable("id") String id){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success", OrderMapper.convertToDTO(orderService.cancelOrder(id))),HttpStatus.OK
+        );
+    }
     @PutMapping("/complete/{id}")
     @Transactional
     public ResponseEntity<StandardResponse> completeOrder(@PathVariable("id") String id,@ModelAttribute OrderCompleteDto request) throws IOException {

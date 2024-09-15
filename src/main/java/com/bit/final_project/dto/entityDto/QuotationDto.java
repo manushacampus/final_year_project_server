@@ -1,5 +1,6 @@
 package com.bit.final_project.dto.entityDto;
 
+import com.bit.final_project.enums.OrderStatus;
 import lombok.Data;
 
 @Data
@@ -8,6 +9,7 @@ public class QuotationDto {
     private String id;
 
     private String type;
+    private String progress;
 
     private String status;
 

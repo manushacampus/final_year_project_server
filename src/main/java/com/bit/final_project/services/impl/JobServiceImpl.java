@@ -15,6 +15,7 @@ import com.bit.final_project.repositories.Door.DoorRepository;
 import com.bit.final_project.repositories.Employee.EmployeeRepository;
 import com.bit.final_project.repositories.Job.JobRepository;
 import com.bit.final_project.repositories.JobEmployee.JobEmployeeRepository;
+import com.bit.final_project.repositories.Quotation.QuotationRepository;
 import com.bit.final_project.repositories.StockItem.StockItemRepository;
 import com.bit.final_project.repositories.Window.WindowRepository;
 import com.bit.final_project.security.filters.CurrentUser;
@@ -50,6 +51,8 @@ public class JobServiceImpl implements JobService {
     EmployeeRepository employeeRepository;
     @Autowired
     JobEmployeeRepository jobEmployeeRepository;
+    @Autowired
+    QuotationRepository quotationRepository;
     @Autowired
     StockService stockService;
     @Autowired
@@ -331,6 +334,12 @@ public class JobServiceImpl implements JobService {
                 stockItemRepository.save(stockItem);
             }
         }
+        if (job.getCreation_type().equals(CREATION_TYPE.QUOTATION)){
+            Quotation quotation = job.getQuotation();
+            quotation.setProgress(OrderStatus.APPROVED);
+            quotationRepository.save(quotation);
+
+        }
 
         return jobRepository.save(job);
     }
@@ -343,9 +352,49 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Job createJobForQuotation() {
+    public Job createJobForDoorQuotation(Quotation quotation) {
+        int jobNumber = Generator.getRandomNumber();
+        String jobCode = "Q"+jobNumber;
+        if (doorRepository.findByCode(jobCode)!=null){
+            throw new EntityExistsException("exists code");
+        }
+        Job job = new Job();
+        job.setId(Generator.getUUID());
+        job.setJobCode(jobCode);
+        job.setType(PRODUCT_TYPE.DOOR);
+        job.setCreation_type(CREATION_TYPE.QUOTATION);
+        job.setProgress(Progress.NEW);
+        job.setStatus(Status.ACTIVE);
+        job.setQty(quotation.getQty());
+        job.setDueDate(LocalDate.now());
+        job.setQuotation(quotation);
+//        job.setDescription(jobDto.getDescription());
+        Job jobResult = jobRepository.save(job);
 
-        return null;
+        return jobResult;
+    }
+
+    @Override
+    public Job createJobForWindowQuotation(Quotation quotation) {
+        int jobNumber = Generator.getRandomNumber();
+        String jobCode = "Q"+jobNumber;
+        if (windowRepository.findByCode(jobCode)!=null){
+            throw new EntityExistsException("exists code");
+        }
+        Job job = new Job();
+        job.setId(Generator.getUUID());
+        job.setJobCode(jobCode);
+        job.setType(PRODUCT_TYPE.WINDOWS);
+        job.setCreation_type(CREATION_TYPE.QUOTATION);
+        job.setProgress(Progress.NEW);
+        job.setStatus(Status.ACTIVE);
+        job.setQty(quotation.getQty());
+        job.setDueDate(LocalDate.now());
+//        job.setDescription(jobDto.getDescription());
+        job.setQuotation(quotation);
+        Job jobResult = jobRepository.save(job);
+
+        return jobResult;
     }
 
 

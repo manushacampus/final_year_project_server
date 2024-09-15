@@ -24,5 +24,6 @@ public interface OrderService {
     Order acceptOrder(String orderId);
     Order deliverOrder(String orderId);
     Order deliveredOrder(String orderId);
+    Order cancelOrder(String orderId);
     Order completeOrder(String orderId,OrderCompleteDto request) throws IOException;
 }

@@ -9,6 +9,7 @@ import com.bit.final_project.dto.entityDto.JobDto;
 import com.bit.final_project.dto.entityDto.WindowDto;
 import com.bit.final_project.enums.Progress;
 import com.bit.final_project.enums.Status;
+import com.bit.final_project.mapper.JobMapper;
 import com.bit.final_project.security.filters.CurrentUser;
 import com.bit.final_project.services.EmployeeService;
 import com.bit.final_project.services.JobService;
@@ -115,19 +116,19 @@ public class JobController {
     @PutMapping("/done/{id}")
     public ResponseEntity<StandardResponse> doneJob(@PathVariable("id") String id, @ModelAttribute MultipartFile image) throws IOException {
         return new ResponseEntity<>(
-                new StandardResponse(HttpStatus.OK.value(),"success",jobService.DoneTheJob(id,image)),HttpStatus.OK
+                new StandardResponse(HttpStatus.OK.value(),"success",JobMapper.convertToDto(jobService.DoneTheJob(id,image))),HttpStatus.OK
         );
     }
     @PutMapping("/done/new/{id}")
     public ResponseEntity<StandardResponse> doneJobNew(@PathVariable("id") String id) {
         return new ResponseEntity<>(
-                new StandardResponse(HttpStatus.OK.value(),"success",jobService.DoneTheJobByNew(id)),HttpStatus.OK
+                new StandardResponse(HttpStatus.OK.value(),"success",JobMapper.convertToDto(jobService.DoneTheJobByNew(id))),HttpStatus.OK
         );
     }
     @PutMapping("/start/{id}")
     public ResponseEntity<StandardResponse> startJob(@PathVariable("id") String id){
         return new ResponseEntity<>(
-                new StandardResponse(HttpStatus.OK.value(),"success",jobService.startTheJob(id)),HttpStatus.OK
+                new StandardResponse(HttpStatus.OK.value(),"success", JobMapper.convertToDto(jobService.startTheJob(id))),HttpStatus.OK
         );
     }
 }

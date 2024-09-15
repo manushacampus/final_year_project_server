@@ -1,11 +1,15 @@
 package com.bit.final_project.models;
 
+import com.bit.final_project.enums.PaymentStatus;
 import com.bit.final_project.enums.PaymentType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -17,9 +21,16 @@ public class Payment {
     private String id;
     private String invoice;
     private Double price;
-    @Column(name = "payment_type")
+    @CreationTimestamp
+    private Instant created_at;
+    @UpdateTimestamp
+    private Instant updated_at;
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    private PaymentType paymentType;
+    private PaymentType type;
+    @Column(name = "payment_status")
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;

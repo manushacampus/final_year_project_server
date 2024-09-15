@@ -4,17 +4,23 @@ import com.bit.final_project.commons.Generator;
 import com.bit.final_project.commons.storage.model.AppFile;
 import com.bit.final_project.commons.storage.service.FilesStorageService;
 import com.bit.final_project.dto.entityDto.PaymentDto;
+import com.bit.final_project.enums.PaymentStatus;
 import com.bit.final_project.enums.PaymentType;
 import com.bit.final_project.exceptions.http.BadRequestException;
 import com.bit.final_project.exceptions.http.EntityExistsException;
+import com.bit.final_project.mapper.PaymentMapper;
 import com.bit.final_project.models.Payment;
 import com.bit.final_project.repositories.Order.OrderRepository;
 import com.bit.final_project.repositories.Payment.PaymentRepository;
+import com.bit.final_project.repositories.Quotation.QuotationRepository;
 import com.bit.final_project.services.CustomerService;
 import com.bit.final_project.services.PaymentService;
 import com.bit.final_project.services.QuotationService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     OrderRepository orderRepository;
     @Autowired
-    QuotationService quotationService;
+    QuotationRepository  quotationRepository;
     @Autowired
     CustomerService customerService;
     @Autowired
@@ -48,15 +54,19 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BadRequestException("Invoice Image is empty!");
         }
 
+        if ( paymentDto.getPaymentStatus() != null) {
+            payment.setPaymentStatus(PaymentStatus.valueOf(paymentDto.getPaymentStatus()));
+        }
         if ( paymentDto.getPaymentType() != null) {
-            payment.setPaymentType(PaymentType.valueOf(paymentDto.getPaymentType()));
+            payment.setType(PaymentType.valueOf(paymentDto.getPaymentType()));
         }
 
         if ( paymentDto.getOrder() != null && paymentDto.getOrder().getId() != null) {
             payment.setOrder(orderRepository.findById(paymentDto.getOrder().getId()).orElseThrow(() -> new EntityExistsException("Order not found with id: " + paymentDto.getOrder().getId())));
         }
         if (paymentDto.getQuotation() != null && paymentDto.getQuotation().getId() != null) {
-            payment.setQuotation(quotationService.getQuotationById(paymentDto.getQuotation().getId()));
+
+            payment.setQuotation(quotationRepository.findById(paymentDto.getQuotation().getId()).orElseThrow(() -> new EntityExistsException("Payment not found with id: " + paymentDto.getQuotation().getId())));
         }
         if (paymentDto.getCustomer() != null && paymentDto.getCustomer().getUser().getId() != null) {
             payment.setCustomer(customerService.getCustomerById(paymentDto.getCustomer().getUser().getId()));
@@ -73,5 +83,12 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setInvoice(saveImage.getImageName());
 
         return paymentRepository.save(payment);
+    }
+
+    @Override
+    public Page<PaymentDto> getAllPaymentByStatusAndType(int page, int size, String status, String paymentType, String statusType) {
+        Pageable pageableRequest = PageRequest.of(page,size);
+        Page<Payment> payments =paymentRepository.findAllByType(pageableRequest,PaymentType.valueOf(paymentType));
+        return payments.map(PaymentMapper::convertToDTO);
     }
 }

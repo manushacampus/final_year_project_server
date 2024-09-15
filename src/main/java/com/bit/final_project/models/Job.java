@@ -23,6 +23,7 @@ public class Job {
     private String id;
     private LocalDateTime start;
     private LocalDateTime end;
+    private String jobCode;
     private int qty;
     @Column(name = "due_date")
     private LocalDate dueDate;

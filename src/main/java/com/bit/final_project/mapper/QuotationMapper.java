@@ -14,6 +14,7 @@ public class QuotationMapper {
         QuotationDto quotationDto = new QuotationDto();
         quotationDto.setId(quotation.getId());
         quotationDto.setQty(quotation.getQty());
+        quotationDto.setProgress(String.valueOf(quotation.getProgress()));
         quotationDto.setStatus(String.valueOf(quotation.getStatus()));
         quotationDto.setType(String.valueOf(quotation.getType()));
 
