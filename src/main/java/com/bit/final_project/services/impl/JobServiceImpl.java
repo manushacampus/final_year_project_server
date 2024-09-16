@@ -302,7 +302,7 @@ public class JobServiceImpl implements JobService {
         if (job.getCreation_type().equals(CREATION_TYPE.PRODUCT)){
             if (job.getType().equals(PRODUCT_TYPE.DOOR)){
                 StockItem stockItem = stockService.getStockItemById(job.getStockItem().getId());
-                stockItem.setQty(stockItem.getQty()+1);
+                stockItem.setQty(stockItem.getQty()+job.getQty());
                 stockItemRepository.save(stockItem);
             }
         }
