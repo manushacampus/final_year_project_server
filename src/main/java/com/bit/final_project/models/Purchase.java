@@ -16,6 +16,8 @@ public class Purchase {
     @Id
     private String id;
     private int qty;
+    @Column(name = "dispatch_qty")
+    private int dispatchQty;
     @Enumerated(EnumType.STRING)
     private Status status;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

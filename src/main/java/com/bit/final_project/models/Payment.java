@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -21,6 +22,7 @@ public class Payment {
     private String id;
     private String invoice;
     private Double price;
+    private LocalDate date;
     @CreationTimestamp
     private Instant created_at;
     @UpdateTimestamp

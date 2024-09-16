@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -97,6 +98,12 @@ public class SalaryServiceImpl implements SalaryService {
         }
 
 
+    }
+
+    @Override
+    public List<Salary> getSalaryByDate(int year, int month) {
+
+        return salaryRepository.findAllByStatusAndDate(Status.ACTIVE,year,month);
     }
 
 //    @Override

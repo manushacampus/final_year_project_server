@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class UtilityServiceImpl implements UtilityService {
@@ -73,5 +74,10 @@ public class UtilityServiceImpl implements UtilityService {
         utility.setBillNo(request.getBillNo());
         utility.setPayment(request.getPayment());
         return utilityRepository.save(utility);
+    }
+
+    @Override
+    public List<Utility> getUtilityByDate(int year, int month) {
+        return utilityRepository.findAllByDate(Status.ACTIVE,year,month);
     }
 }

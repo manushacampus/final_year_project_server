@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface SalaryService {
 
@@ -16,4 +17,6 @@ public interface SalaryService {
 
     Page<SalaryDto> getAll(int page, int size, String status,String employeeId,String date);
 //    Salary update(String id,SalaryDto request);
+
+    List<Salary> getSalaryByDate(int year,int month);
 }

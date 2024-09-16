@@ -115,6 +115,10 @@ public class InventoryServiceImpl implements InventoryService {
             uuid = Generator.getUUID();
         } while (otherRepository.existsById(uuid));
         other.setId(uuid);
+        other.setName(request.getName());
+        other.setLength(request.getLength());
+        other.setWeight(request.getWeight());
+        other.setColor(request.getColor());
         Other responseOther = otherRepository.save(other);
         Inventory inventory= new Inventory();
         do {

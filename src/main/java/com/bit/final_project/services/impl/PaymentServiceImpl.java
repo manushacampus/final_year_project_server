@@ -6,6 +6,7 @@ import com.bit.final_project.commons.storage.service.FilesStorageService;
 import com.bit.final_project.dto.entityDto.PaymentDto;
 import com.bit.final_project.enums.PaymentStatus;
 import com.bit.final_project.enums.PaymentType;
+import com.bit.final_project.enums.Status;
 import com.bit.final_project.exceptions.http.BadRequestException;
 import com.bit.final_project.exceptions.http.EntityExistsException;
 import com.bit.final_project.mapper.PaymentMapper;
@@ -25,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -90,5 +93,13 @@ public class PaymentServiceImpl implements PaymentService {
         Pageable pageableRequest = PageRequest.of(page,size);
         Page<Payment> payments =paymentRepository.findAllByType(pageableRequest,PaymentType.valueOf(paymentType));
         return payments.map(PaymentMapper::convertToDTO);
+    }
+
+    @Override
+    public List<Payment> getAllPaymentByStatusAndTypeAndDate(Status status, PaymentType type, String date) {
+        LocalDate lDate = LocalDate.parse(date);
+        int year = lDate.getYear();
+        int month = lDate.getMonthValue();
+        return paymentRepository.findByYearAndMonthAndType(year,month,String.valueOf(type));
     }
 }

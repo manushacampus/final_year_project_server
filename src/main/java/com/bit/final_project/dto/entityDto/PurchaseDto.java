@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class PurchaseDto {
     private String id;
     private int qty;
-
+    private int dispatchQty;
     private String status;
     private SupplierDto supplier;
     private InventoryDto inventory;
@@ -21,6 +21,9 @@ public class PurchaseDto {
         PurchaseDto purchaseDto = new PurchaseDto();
         purchaseDto.setId(purchase.getId());
         purchaseDto.setQty(purchase.getQty());
+        purchaseDto.setDispatchQty(purchase.getDispatchQty());
+
+
         purchaseDto.setSupplier(SupplierDto.init(purchase.getSupplier()));
         purchaseDto.setInventory(InventoryMapper.convertToDto(purchase.getInventory()));
         return purchaseDto;

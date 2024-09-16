@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import javax.mail.MessagingException;
 
 public interface PurchaseService {
+    Purchase getPurchaseById(String id);
     Purchase createPurchase(int qty,String supplier,String inventory) throws MessagingException;
     Page<PurchaseDto> getJPurchaseByStatus(Status status, int page, int size);
 }

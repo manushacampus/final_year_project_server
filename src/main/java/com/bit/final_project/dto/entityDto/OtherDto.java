@@ -16,8 +16,8 @@ public class OtherDto {
 
     public static OtherDto init(Other other){
         OtherDto otherDto = new OtherDto();
-        otherDto.setId(otherDto.id);
-        otherDto.setColor(otherDto.getColor());
+        otherDto.setId(other.getId());
+        otherDto.setColor(other.getColor());
         otherDto.setLength(other.getLength());
         otherDto.setWeight(other.getWeight());
         otherDto.setName(other.getName());

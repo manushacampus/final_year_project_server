@@ -3,6 +3,7 @@ package com.bit.final_project.services.impl;
 import com.bit.final_project.commons.Generator;
 import com.bit.final_project.dto.entityDto.PurchaseDto;
 import com.bit.final_project.enums.Status;
+import com.bit.final_project.exceptions.http.EntityExistsException;
 import com.bit.final_project.models.Inventory;
 import com.bit.final_project.models.Purchase;
 import com.bit.final_project.models.Supplier;
@@ -31,6 +32,12 @@ public class PurchaseServiceImpl implements PurchaseService {
     EmailService emailService;
     @Autowired
     PurchaseRepository purchaseRepository;
+
+    @Override
+    public Purchase getPurchaseById(String id) {
+        return purchaseRepository.findById(id).orElseThrow(()-> new EntityExistsException("Purchase not found with id: " + id));
+    }
+
     @Override
     public Purchase createPurchase(int qty, String supplierId, String inventoryId) throws MessagingException {
         Supplier supplier = supplierService.getSupplierbyId(supplierId);

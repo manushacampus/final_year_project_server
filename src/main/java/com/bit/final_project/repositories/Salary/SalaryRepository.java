@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface SalaryRepository extends JpaRepository<Salary,String> {
@@ -29,5 +30,11 @@ public interface SalaryRepository extends JpaRepository<Salary,String> {
                                                            @Param("employee") Employee employee,
                                                            @Param("year") int year,
                                                            @Param("month") int month);
+
+    @Query("SELECT s FROM Salary s WHERE s.status = :status AND " +
+            "YEAR(s.date) = :year AND MONTH(s.date) = :month")
+    List<Salary> findAllByStatusAndDate(@Param("status") Status status,
+                                        @Param("year") int year,
+                                        @Param("month") int month);
 
 }
