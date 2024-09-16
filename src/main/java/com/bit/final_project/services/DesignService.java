@@ -25,4 +25,6 @@ public interface DesignService {
      Design changeStatus(String status,String id);
 
      DesignInventory deleteById(String id);
+
+     Design Update(DesignDto request);
 }

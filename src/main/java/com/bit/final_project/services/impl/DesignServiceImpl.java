@@ -5,6 +5,7 @@ import com.bit.final_project.commons.storage.model.AppFile;
 import com.bit.final_project.commons.storage.service.FilesStorageService;
 import com.bit.final_project.dto.DesignAndInventoryDto;
 import com.bit.final_project.dto.entityDto.DesignDto;
+import com.bit.final_project.enums.DESIGN_TYPE;
 import com.bit.final_project.enums.HeightOrWidth;
 import com.bit.final_project.enums.Status;
 import com.bit.final_project.exceptions.http.BadRequestException;
@@ -105,6 +106,23 @@ public class DesignServiceImpl implements DesignService {
        DesignInventory designInventory = getDesignInventoryById(id);
         designInventoryRepository.deleteById(id);
         return designInventory;
+    }
+
+    @Override
+    public Design Update(DesignDto request) {
+        Design design = getDesignById(request.getId());
+        if (request.getCode()!=null){
+            design.setCode(request.getCode());
+        }
+        if (request.getType()!=null){
+            design.setType(DESIGN_TYPE.valueOf(request.getType()));
+        }
+        if (request.getName()!=null){
+            design.setName(request.getName());
+        }
+        return designRepository.save(design);
+
+
     }
 
     @Override

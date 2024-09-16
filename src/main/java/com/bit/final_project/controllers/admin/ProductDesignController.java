@@ -89,5 +89,13 @@ public class ProductDesignController {
                 new StandardResponse(HttpStatus.OK.value(),"success",DesignMapper.convertToDTO(designService.changeStatus(status,id))),HttpStatus.OK
         );
     }
+    @PutMapping("/update")
+    @Transactional
+    public ResponseEntity<StandardResponse> updateDesign(@RequestBody DesignDto request){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success",designService.Update(request)),HttpStatus.OK
+        );
+    }
+
 
 }

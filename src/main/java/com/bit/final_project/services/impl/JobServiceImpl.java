@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -203,7 +204,7 @@ public class JobServiceImpl implements JobService {
     public Page<JobDto> getJobBYStatusAndProgress(Status status, Progress progress, int page, int size) {
         log.info("page={}",page);
         log.info("size={}",size);
-        Pageable pageableRequest = PageRequest.of(page,size);
+        Pageable pageableRequest = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "updatedAt"));
         if (progress.equals(Progress.ALL)){
             return jobRepository.findByStatus(pageableRequest,status).map(JobDto::init);
         }
