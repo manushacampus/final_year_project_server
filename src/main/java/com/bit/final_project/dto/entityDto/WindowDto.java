@@ -33,6 +33,7 @@ public class WindowDto {
         windowDto.setCode(windows.getCode());
         windowDto.setHeight(windows.getHeight());
         windowDto.setWidth(windows.getWidth());
+        windowDto.setWindowColor(windows.getWindowColor());
         windowDto.setStatus(String.valueOf(windows.getStatus()));
         if (windows != null && windows.getImage() != null && !windows.getImage().isEmpty()) {
             windowDto.setImage(URL.fileStorageUrl.replace("{type}", "product").replace("{fileName}", windows.getImage()));

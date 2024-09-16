@@ -10,6 +10,7 @@ public class DoorQuotationDto {
     private Double height;
     private Double width;
     private int qty;
+    private String additional;
     private String color;
     private DesignDto design;
 }

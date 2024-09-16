@@ -50,4 +50,12 @@ public class CCartController {
                 new StandardResponse(HttpStatus.OK.value(),"success", CartMapper.convertToDTO(cartService.changeQty(id,qty))),HttpStatus.OK
         );
     }
+    @DeleteMapping(value = "/delete")
+    public @ResponseBody
+    @Transactional
+    ResponseEntity<StandardResponse> deleteCart(@RequestParam("id") String id){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success", CartMapper.convertToDTO(cartService.deleteCartById(id))),HttpStatus.OK
+        );
+    }
 }

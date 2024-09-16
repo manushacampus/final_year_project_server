@@ -5,6 +5,7 @@ import com.bit.final_project.dto.entityDto.DoorDto;
 import com.bit.final_project.dto.entityDto.DoorQuotationDto;
 import com.bit.final_project.dto.entityDto.QuotationDto;
 import com.bit.final_project.dto.entityDto.WindowQuotationDto;
+import com.bit.final_project.mapper.OrderMapper;
 import com.bit.final_project.mapper.QuotationMapper;
 import com.bit.final_project.services.DoorService;
 import com.bit.final_project.services.QuotationService;
@@ -56,6 +57,13 @@ public class CQuotationController {
     ResponseEntity<StandardResponse> getQuotationByUser(){
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),"success", quotationService.getAllByUser().stream().map(QuotationMapper::convertToDto).collect(Collectors.toList()) ),HttpStatus.OK
+        );
+    }
+
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<StandardResponse> cancelOrder(@PathVariable("id") String id){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success", QuotationMapper.convertToDto(quotationService.cancelOrder(id))),HttpStatus.OK
         );
     }
 }

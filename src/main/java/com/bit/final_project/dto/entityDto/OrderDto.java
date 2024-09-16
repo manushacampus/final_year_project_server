@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 public class OrderDto {
     private String id;
     private Double total;
+    private String orderCode;
     private String createdAt;
     private String updatedAt;
     private String status;

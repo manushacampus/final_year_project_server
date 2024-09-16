@@ -65,4 +65,11 @@ public class CartServiceImpl implements CartService {
         cart.setQty(qty);
         return cartRepository.save(cart);
     }
+
+    @Override
+    public Cart removeCart(String id) {
+        Cart cart = getCartById(id);
+        cartRepository.delete(cart);
+        return cart;
+    }
 }

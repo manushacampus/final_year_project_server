@@ -16,6 +16,8 @@ import java.time.Instant;
 public class Order {
     @Id
     private String id;
+    @Column(name = "order_code")
+    private String orderCode;
     private Double total;
     @CreationTimestamp
     private Instant created_at;

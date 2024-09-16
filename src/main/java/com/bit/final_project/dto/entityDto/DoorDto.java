@@ -34,6 +34,7 @@ public class DoorDto {
         doorDto.setCode(door.getCode());
         doorDto.setHeight(door.getHeight());
         doorDto.setWidth(door.getWidth());
+        doorDto.setDoorColor(doorDto.getDoorColor());
         doorDto.setStatus(String.valueOf(door.getStatus()));
         if (door != null && door.getImage() != null && !door.getImage().isEmpty()) {
             doorDto.setImage(URL.fileStorageUrl.replace("{type}", "product").replace("{fileName}", door.getImage()));

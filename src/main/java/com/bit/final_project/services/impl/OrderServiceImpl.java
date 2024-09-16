@@ -71,8 +71,9 @@ public class OrderServiceImpl implements OrderService {
         StockItem stockItem = stockService.getStockItemById(id);
         Order order = new Order();
         order.setId(Generator.getUUID());
+        order.setOrderCode(Generator.getRandomNumberAsString());
         order.setCustomer(customer);
-        order.setTotal(stockItem.getPrice());
+        order.setTotal(stockItem.getPrice()*qty);
         order.setStatus(Status.ACTIVE);
         order.setType(OrderStatus.PENDING);
         Order orderResponse = orderRepository.save(order);
@@ -90,9 +91,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order orderProductCart(List<Cart> cart) {
         Customer customer = customerRepository.findByUser(CurrentUser.getUser());
+        Double total=0.0;
         Order order = new Order();
         order.setId(Generator.getUUID());
+        order.setOrderCode(Generator.getRandomNumberAsString());
         order.setCustomer(customer);
+        order.setStatus(Status.ACTIVE);
+        order.setType(OrderStatus.PENDING);
         Order orderResponse = orderRepository.save(order);
         if (orderResponse != null){
             for (Cart cartRe : cart) {
@@ -101,13 +106,17 @@ public class OrderServiceImpl implements OrderService {
                 orderStock.setStockItem(cartRe.getStockItem());
                 orderStock.setOrder(orderResponse);
                 orderStock.setQty(cartRe.getQty());
+
+                total = total+(cartRe.getStockItem().getPrice()*cartRe.getQty());
+
                 orderStockRepository.save(orderStock);
                 cartService.deleteCartById(cartRe.getId());
                 log.info("Qty cart={}",cartRe.getQty());
             }
         }
+        orderResponse.setTotal(total);
 
-        return orderResponse;
+        return orderRepository.save(orderResponse);
     }
 
     @Override

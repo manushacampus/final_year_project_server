@@ -22,6 +22,7 @@ public class StockItemDto {
         stockItemDto.setType(String.valueOf(stockItem.getType()));
         stockItemDto.setStatus(String.valueOf(stockItem.getStatus()));
         stockItemDto.setQty(stockItem.getQty());
+        stockItemDto.setPrice(stockItem.getPrice());
         if (stockItem.getDoor() != null) {
             stockItemDto.setDoor(DoorDto.init(stockItem.getDoor()));
         }

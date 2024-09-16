@@ -12,4 +12,6 @@ public interface CartService {
     List<Cart> getAllCartByCustomer();
 
     Cart changeQty(String cartId,int qty);
+
+    Cart removeCart(String id);
 }

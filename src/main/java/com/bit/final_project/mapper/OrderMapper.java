@@ -14,7 +14,7 @@ public class OrderMapper {
         dto.setTotal(order.getTotal());
         dto.setStatus(String.valueOf(order.getStatus()));
         dto.setOrderType(String.valueOf(order.getType()));
-
+        dto.setOrderCode(order.getOrderCode());
         if (order.getCreated_at() != null) {
             LocalDateTime localDateTime = LocalDateTime.ofInstant(order.getCreated_at(), ZoneId.systemDefault());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
