@@ -1,6 +1,7 @@
 package com.bit.final_project.dto.entityDto;
 
 import com.bit.final_project.commons.URL;
+import com.bit.final_project.enums.ColorType;
 import com.bit.final_project.models.Door;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,6 +36,33 @@ public class DoorDto {
         doorDto.setHeight(door.getHeight());
         doorDto.setWidth(door.getWidth());
         doorDto.setDoorColor(doorDto.getDoorColor());
+
+        if (door.getColorType()!=null){
+            doorDto.setColorType(String.valueOf(door.getColorType()));
+        }
+        if (door.getFillingType()!=null){
+            doorDto.setFillingType(String.valueOf(door.getFillingType()));
+        }
+        if (door.getTypeOfBoard()!=null){
+            doorDto.setTypeOfBoard(String.valueOf(door.getTypeOfBoard()));
+        }
+        if (door.getType()!=null){
+            doorDto.setType(String.valueOf(door.getType()));
+        }
+        if (door.getBoardColor()!=null){
+            doorDto.setBoardColor(door.getBoardColor());
+        }
+        if (door.getBoardThickness()!=null){
+            doorDto.setBoardThickness(door.getBoardThickness());
+        }
+        if (door.getGlassColor()!=null){
+            doorDto.setGlassColor(door.getGlassColor());
+        }
+        if (door.getGlassThickness()!=null){
+            doorDto.setGlassThickness(door.getGlassThickness());
+        }
+
+
         doorDto.setStatus(String.valueOf(door.getStatus()));
         if (door != null && door.getImage() != null && !door.getImage().isEmpty()) {
             doorDto.setImage(URL.fileStorageUrl.replace("{type}", "product").replace("{fileName}", door.getImage()));

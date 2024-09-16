@@ -35,6 +35,34 @@ public class WindowDto {
         windowDto.setWidth(windows.getWidth());
         windowDto.setWindowColor(windows.getWindowColor());
         windowDto.setStatus(String.valueOf(windows.getStatus()));
+
+
+        if (windows.getColorType()!=null){
+            windowDto.setColorType(String.valueOf(windows.getColorType()));
+        }
+        if (windows.getFillingType()!=null){
+            windowDto.setFillingType(String.valueOf(windows.getFillingType()));
+        }
+        if (windows.getTypeOfBoard()!=null){
+            windowDto.setTypeOfBoard(String.valueOf(windows.getTypeOfBoard()));
+        }
+        if (windows.getType()!=null){
+            windowDto.setType(String.valueOf(windows.getType()));
+        }
+        if (windows.getBoardColor()!=null){
+            windowDto.setBoardColor(windows.getBoardColor());
+        }
+        if (windows.getBoardThickness()!=null){
+            windowDto.setBoardThickness(windows.getBoardThickness());
+        }
+        if (windows.getGlassColor()!=null){
+            windowDto.setGlassColor(windows.getGlassColor());
+        }
+        if (windows.getGlassThickness()!=null){
+            windowDto.setGlassThickness(windows.getGlassThickness());
+        }
+
+
         if (windows != null && windows.getImage() != null && !windows.getImage().isEmpty()) {
             windowDto.setImage(URL.fileStorageUrl.replace("{type}", "product").replace("{fileName}", windows.getImage()));
         }
