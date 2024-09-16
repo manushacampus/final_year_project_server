@@ -73,9 +73,10 @@ public class CustomerServiceImpl implements CustomerService{
 
         user.setContact(customer.getUser().getContact());
 
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        user.setBirthday(LocalDate.parse(customer.getUser().getDob(),formatter));
+        if (customer.getUser().getDob()!=null){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            user.setBirthday(LocalDate.parse(customer.getUser().getDob(),formatter));
+        }
 
 
         userRepository.save(user);
