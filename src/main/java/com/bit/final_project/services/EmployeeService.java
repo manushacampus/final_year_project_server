@@ -20,6 +20,7 @@ import java.io.IOException;
 public interface EmployeeService {
     Employee register(UserDto userDto, EmployeeDto employeeDto, MultipartFile profilePicture)throws IOException;
     Page<EmployeeDto> getAll(int page, int size);
+    int getAllActiveEmployeeCount();
 
     Employee getEmployeeById(String id);
     Employee getEmployeeByUser(User user);

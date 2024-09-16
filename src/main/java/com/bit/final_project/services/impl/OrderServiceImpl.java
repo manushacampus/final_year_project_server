@@ -22,6 +22,7 @@ import com.bit.final_project.repositories.StockItem.StockItemRepository;
 import com.bit.final_project.security.filters.CurrentUser;
 import com.bit.final_project.services.*;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -211,5 +212,11 @@ public class OrderServiceImpl implements OrderService {
             order.setType(OrderStatus.COMPLETED);
         }
         return orderRepository.save(order);
+    }
+
+    @Override
+    public int getTotalOrders(String status) {
+        List<Order> orderList = orderRepository.findAllByStatus(Status.valueOf(status));
+        return  orderList.size();
     }
 }

@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -88,6 +89,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         Pageable pageableRequest = PageRequest.of(page,size);
         Page<EmployeeDto> employeesPage= employeeRepository.findAll(pageableRequest).map(EmployeeMapper::convertToDTO);
         return employeesPage;
+    }
+
+    @Override
+    public int getAllActiveEmployeeCount() {
+       List<Employee> e= employeeRepository.findAllByStatus(Status.ACTIVE);
+        return e.size();
     }
 
     @Override

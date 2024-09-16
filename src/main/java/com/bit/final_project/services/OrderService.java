@@ -26,4 +26,5 @@ public interface OrderService {
     Order deliveredOrder(String orderId);
     Order cancelOrder(String orderId);
     Order completeOrder(String orderId,OrderCompleteDto request) throws IOException;
+    int getTotalOrders(String status);
 }

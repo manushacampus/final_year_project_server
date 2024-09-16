@@ -6,6 +6,7 @@ import com.bit.final_project.commons.storage.service.FilesStorageService;
 import com.bit.final_project.dto.entityDto.CustomerDto;
 import com.bit.final_project.exceptions.http.BadRequestException;
 import com.bit.final_project.exceptions.http.EntityExistsException;
+import com.bit.final_project.mapper.CustomerMapper;
 import com.bit.final_project.models.Customer;
 import com.bit.final_project.models.Design;
 import com.bit.final_project.models.User;
@@ -16,6 +17,9 @@ import com.bit.final_project.services.CustomerService;
 import com.bit.final_project.services.UserService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -96,5 +100,11 @@ public class CustomerServiceImpl implements CustomerService{
         user.setImage(saveProductDesignImage.getImageName());
         userRepository.save(user);
         return customerResponse;
+    }
+
+    @Override
+    public Page<CustomerDto> getCustomerByStatus(int page, int size, String status) {
+        Pageable pageableRequest = PageRequest.of(page,size);
+        return customerRepository.findAll(pageableRequest).map(CustomerMapper::convertToDTO);
     }
 }
