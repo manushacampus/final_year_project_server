@@ -22,7 +22,8 @@ public class Order {
     @CreationTimestamp
     private Instant created_at;
     @UpdateTimestamp
-    private Instant updated_at;
+    @Column(name = "updated_at")
+    private Instant updatedAt;
     @Enumerated(EnumType.STRING)
     private OrderStatus type;
     @Column(name = "payment_status")

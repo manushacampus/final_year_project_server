@@ -20,8 +20,8 @@ public class OrderMapper {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             dto.setCreatedAt(localDateTime.format(formatter));
         }
-        if (order.getUpdated_at() != null) {
-            LocalDateTime localDateTime = LocalDateTime.ofInstant(order.getUpdated_at(), ZoneId.systemDefault());
+        if (order.getUpdatedAt() != null) {
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(order.getUpdatedAt(), ZoneId.systemDefault());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             dto.setUpdatedAt(localDateTime.format(formatter));
         }

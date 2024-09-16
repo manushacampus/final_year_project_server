@@ -29,8 +29,9 @@ public class Quotation {
     private OrderStatus progress;
     @CreationTimestamp
     private Instant created_at;
+    @Column(name = "updated_at")
     @UpdateTimestamp
-    private Instant updated_at;
+    private Instant updatedAt;
     @Enumerated(EnumType.STRING)
     private Status status;
     @Enumerated(EnumType.STRING)

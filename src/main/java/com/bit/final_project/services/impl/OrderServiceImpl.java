@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -122,7 +123,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<OrderDto> getAllOrdersByCustomer(int page, int size, String status, String orderType) {
         Customer customer = customerRepository.findByUser(CurrentUser.getUser());
-        Pageable pageableRequest = PageRequest.of(page,size);
+
+        Pageable pageableRequest = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "updatedAt"));
         Page<Order> order = orderRepository.findAllByCustomer(pageableRequest,customer);
         Page<OrderDto> orderDto = order.map(OrderMapper::convertToDTO);
         return orderDto;

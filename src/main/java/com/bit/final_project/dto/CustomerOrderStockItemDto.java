@@ -38,7 +38,7 @@ public class CustomerOrderStockItemDto {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             stockItemDto.setCreatedAt(localDateTime.format(formatter));
         }
-        if (order.getUpdated_at() != null) {
+        if (order.getUpdatedAt() != null) {
             LocalDateTime localDateTime = LocalDateTime.ofInstant(order.getCreated_at(), ZoneId.systemDefault());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             stockItemDto.setUpdatedAt(localDateTime.format(formatter));

@@ -23,8 +23,8 @@ public class QuotationMapper {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             quotationDto.setCreatedAt(localDateTime.format(formatter));
         }
-        if (quotation.getUpdated_at() != null) {
-            LocalDateTime localDateTime = LocalDateTime.ofInstant(quotation.getUpdated_at(), ZoneId.systemDefault());
+        if (quotation.getUpdatedAt() != null) {
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(quotation.getUpdatedAt(), ZoneId.systemDefault());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             quotationDto.setUpdatedAt(localDateTime.format(formatter));
         }
