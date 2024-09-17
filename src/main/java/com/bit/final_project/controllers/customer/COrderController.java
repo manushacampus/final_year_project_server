@@ -1,7 +1,9 @@
 package com.bit.final_project.controllers.customer;
 
 import com.bit.final_project.commons.StandardResponse;
+import com.bit.final_project.dto.OrderStockDto;
 import com.bit.final_project.mapper.OrderMapper;
+import com.bit.final_project.mapper.StockItemMapper;
 import com.bit.final_project.services.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/customer/order")
@@ -33,5 +37,13 @@ public class COrderController {
         return new ResponseEntity<>(
                 new StandardResponse(HttpStatus.OK.value(),"success", OrderMapper.convertToDTO(orderService.cancelOrder(id))),HttpStatus.OK
         );
+    }
+    @GetMapping("/{id}")
+    public @ResponseBody
+    ResponseEntity<StandardResponse> getProductByOrder(@PathVariable("id") String id){
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success", orderService.getStockByOrder(id).stream().map(StockItemMapper::convertToDto).collect(Collectors.toList())),HttpStatus.OK
+        );
+
     }
 }

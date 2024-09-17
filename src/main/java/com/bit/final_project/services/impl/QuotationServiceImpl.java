@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -54,11 +55,20 @@ public class QuotationServiceImpl implements QuotationService {
     public Quotation createDoorQuotation(DoorQuotationDto dto) {
         Customer customer = customerRepository.findByUser(CurrentUser.getUser());
         log.info("customer --------={}",customer.getUser_id());
+        if (dto.getQty()<=0){
+            throw new EntityNotFoundException("Invalid Qty");
+        }
         if (customer == null) {
             throw new EntityNotFoundException("Cannot place order: user not found");
         }
+        if (dto.getHeight()<=0 || dto.getWidth()<=0){
+            throw new EntityNotFoundException("Invalid input");
+        }
+        Double total =((dto.getHeight()*dto.getWidth())/900)*30* dto.getQty();
+        String formattedTotal = String.format("%.2f", total);
         Quotation quotation = new Quotation();
         quotation.setId(Generator.getUUID());
+        quotation.setTotal(Double.valueOf(formattedTotal));
         quotation.setDoorQuotation(doorQuotationService.create(dto));
         quotation.setQty(dto.getQty());
         quotation.setType(DESIGN_TYPE.DOOR);
@@ -72,11 +82,20 @@ public class QuotationServiceImpl implements QuotationService {
     public Quotation createWindowQuotation(WindowQuotationDto dto) {
         Customer customer = customerRepository.findByUser(CurrentUser.getUser());
         log.info("customer --------={}",customer.getUser_id());
+        if (dto.getQty()<=0){
+            throw new EntityNotFoundException("Invalid Qty");
+        }
         if (customer == null) {
             throw new EntityNotFoundException("Cannot place order: user not found");
         }
+        if (dto.getHeight()<=0 || dto.getWidth()<=0){
+            throw new EntityNotFoundException("Invalid input");
+        }
+        Double total =((dto.getHeight()*dto.getWidth())/900)*25* dto.getQty();
+        String formattedTotal = String.format("%.2f", total);
         Quotation quotation = new Quotation();
         quotation.setId(Generator.getUUID());
+        quotation.setTotal(Double.valueOf(formattedTotal));
         quotation.setWindowQuotation(windowQuotationService.create(dto));
         quotation.setQty(dto.getQty());
         quotation.setType(DESIGN_TYPE.WINDOWS);
@@ -171,8 +190,9 @@ public class QuotationServiceImpl implements QuotationService {
 
     @Override
     public List<Quotation> getAllByUser() {
+        log.info("88888888888888888888888888");
         Customer customer = customerRepository.findByUser(CurrentUser.getUser());
-        return quotationRepository.findAllByCustomer(customer);
+        return quotationRepository.findAllByCustomer(customer, Sort.by(Sort.Direction.DESC, "updatedAt"));
     }
     @Override
     public Quotation approvedQuotation(String id){

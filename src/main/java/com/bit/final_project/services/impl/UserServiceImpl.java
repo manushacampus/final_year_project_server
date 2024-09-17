@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -62,6 +65,16 @@ public class UserServiceImpl implements UserService {
         }
         user.setUser_role(UserRole.CUSTOMER);
         user.setFirst_name(request.getFirstName());
+        user.setLast_name(request.getLastName());
+        user.setAddress(request.getAddress());
+        user.setGender(request.getGender());
+        user.setContact(request.getContact());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        user.setBirthday(LocalDate.parse(request.getDob(),formatter));
+
+        LocalDate current = LocalDate.now();
+        user.setRegistered_date(current);
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userRepository.save(user);

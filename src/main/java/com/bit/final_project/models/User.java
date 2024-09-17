@@ -34,7 +34,7 @@ public class User {
     private String nic;
     @Column(length = 100,columnDefinition = "DATE")
     private LocalDate birthday;
-    private String registered_date;
+    private LocalDate registered_date;
     private String image;
     private String contact;
     @Column(name = "verify_code")
@@ -61,7 +61,9 @@ public class User {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         user.setBirthday(LocalDate.parse(request.getDob(),formatter));
 
-        user.setRegistered_date(request.getRegisteredDate());
+        LocalDate current = LocalDate.now();
+        user.setRegistered_date(current);
+
         user.setImage(request.getImage());
         user.setContact(request.getContact());
         user.setStatus(Status.ACTIVE);

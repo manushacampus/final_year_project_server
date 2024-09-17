@@ -10,7 +10,7 @@ public class QuotationDto {
 
     private String type;
     private String progress;
-
+    private Double total;
     private String status;
 
     private int qty;

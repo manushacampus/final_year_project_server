@@ -1,5 +1,6 @@
 package com.bit.final_project.controllers;
 
+import com.bit.final_project.commons.StandardResponse;
 import com.bit.final_project.dto.LoginDto;
 import com.bit.final_project.dto.TestDto;
 import com.bit.final_project.dto.UserDto;
@@ -10,6 +11,8 @@ import com.bit.final_project.services.EmployeeService;
 import com.bit.final_project.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,11 +29,11 @@ public class UserController {
 
     @PostMapping("/register")
     public @ResponseBody
-    UserDto register(@RequestBody UserDto request){
+    ResponseEntity<StandardResponse> register(@RequestBody UserDto request){
        User user = userService.register(request);
-       UserDto userDto = new UserDto();
-       userDto.setFirstName(user.getFirst_name());
-       return userDto;
+        return new ResponseEntity<>(
+                new StandardResponse(HttpStatus.OK.value(),"success",UserDto.init(user)),HttpStatus.OK
+        );
     }
 
     @PostMapping("/login")

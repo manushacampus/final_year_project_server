@@ -7,6 +7,7 @@ import com.bit.final_project.models.Order;
 import com.bit.final_project.models.Quotation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,6 @@ public interface QuotationRepository extends JpaRepository<Quotation,String> {
     Page<Quotation> findAllByStatusAndProgress(Pageable pageable, Status status, OrderStatus orderStatus);
     Page<Quotation> findAll(Pageable pageable);
 
-    List<Quotation> findAllByCustomer(Customer customer);
+    List<Quotation> findAllByCustomer(Customer customer, Sort sort);
 
 }

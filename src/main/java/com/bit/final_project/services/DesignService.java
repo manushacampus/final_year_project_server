@@ -18,7 +18,7 @@ public interface DesignService {
 
      Inventory addInventoryForDesign(DesignAndInventoryDto request);
 
-     Page<DesignDto> getALlDesignByStatusPage(String status,int page, int size);
+     Page<DesignDto> getALlDesignByStatusPage(String status,int page, int size,String type);
 
      List<DesignInventory> getInventoryByDesign(String designId);
 

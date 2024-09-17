@@ -67,8 +67,14 @@ public class JobServiceImpl implements JobService {
     @Transactional
     @Override
     public Job createJobForDoor(JobDto jobDto, DoorDto doorDto){
-        log.info("job={}",jobDto.getDueDate());
+        log.info("job PRice={}",jobDto.getUnitPrice());
         log.info("door={}",doorDto.getCode());
+        if (jobDto.getUnitPrice()<=0){
+            throw new EntityExistsException("Enter Valid Price");
+        }
+        if (jobDto.getQty()<=0){
+            throw new EntityExistsException("Qty is Invalid");
+        }
         if (doorRepository.findByCode(doorDto.getCode())!=null){
             throw new EntityExistsException("exists code");
         }
@@ -104,6 +110,13 @@ public class JobServiceImpl implements JobService {
     public Job createJobForWindow(JobDto jobDto, WindowDto windowDto) {
         log.info("job={}",jobDto.getDueDate());
         log.info("window={}",windowDto.getCode());
+        log.info("job PRice={}",jobDto.getUnitPrice());
+        if (jobDto.getUnitPrice()<=0){
+            throw new EntityExistsException("Enter Valid Price");
+        }
+        if (jobDto.getQty()<=0){
+            throw new EntityExistsException("Qty is Invalid");
+        }
         if (windowRepository.findByCode(windowDto.getCode())!=null){
             throw new EntityExistsException("exists code");
         }
@@ -139,6 +152,9 @@ public class JobServiceImpl implements JobService {
     public Job updateJobForDoor(JobDto jobDto, DoorDto doorDto) {
         log.info("updateJobForDoor job id={}",jobDto.getId());
         log.info("updateJobForDoor door id={}",doorDto.getId());
+        if (jobDto.getQty()<=0){
+            throw new EntityExistsException("Qty is Invalid");
+        }
         Door doorTest =doorRepository.findByCode(doorDto.getCode());
 //        if (doorTest!=null){
 //
@@ -331,7 +347,7 @@ public class JobServiceImpl implements JobService {
         if (job.getCreation_type().equals(CREATION_TYPE.PRODUCT)){
             if (job.getType().equals(PRODUCT_TYPE.DOOR)){
                 StockItem stockItem = stockService.getStockItemById(job.getStockItem().getId());
-                stockItem.setQty(stockItem.getQty()+1);
+                stockItem.setQty(stockItem.getQty()+job.getQty());
                 stockItemRepository.save(stockItem);
             }
         }

@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -229,5 +230,17 @@ public class OrderServiceImpl implements OrderService {
     public int getTotalOrders(String status) {
         List<Order> orderList = orderRepository.findAllByStatus(Status.valueOf(status));
         return  orderList.size();
+    }
+
+    @Override
+    public List<StockItem> getStockByOrder(String orderId) {
+        Order order =getOrderById(orderId);
+        List<OrderStock> stockItems = orderStockRepository.findAllByOrder(order);
+        List<StockItem> stockItemsList = new ArrayList<>();
+        for (OrderStock orderStock: stockItems) {
+            stockItemsList.add(orderStock.getStockItem());
+        }
+
+        return stockItemsList;
     }
 }

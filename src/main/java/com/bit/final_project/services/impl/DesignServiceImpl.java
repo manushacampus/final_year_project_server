@@ -88,10 +88,14 @@ public class DesignServiceImpl implements DesignService {
     }
 
     @Override
-    public Page<DesignDto> getALlDesignByStatusPage(String status, int page, int size) {
+    public Page<DesignDto> getALlDesignByStatusPage(String status, int page, int size,String type) {
         Pageable pageableRequest = PageRequest.of(page,size);
         if (status!=""){
+            if (type!=""){
+                return  designRepository.findAllByStatusAndType(pageableRequest,Status.valueOf(status),DESIGN_TYPE.valueOf(type)).map(DesignMapper::convertToDTO);
+            }
             return  designRepository.findAllByStatus(pageableRequest,Status.valueOf(status)).map(DesignMapper::convertToDTO);
+
         }
         return  designRepository.findAll(pageableRequest).map(DesignMapper::convertToDTO);
     }

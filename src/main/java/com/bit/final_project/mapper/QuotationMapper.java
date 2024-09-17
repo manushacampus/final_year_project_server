@@ -17,7 +17,7 @@ public class QuotationMapper {
         quotationDto.setProgress(String.valueOf(quotation.getProgress()));
         quotationDto.setStatus(String.valueOf(quotation.getStatus()));
         quotationDto.setType(String.valueOf(quotation.getType()));
-
+        quotationDto.setTotal(quotation.getTotal());
         if (quotation.getCreated_at() != null) {
             LocalDateTime localDateTime = LocalDateTime.ofInstant(quotation.getCreated_at(), ZoneId.systemDefault());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

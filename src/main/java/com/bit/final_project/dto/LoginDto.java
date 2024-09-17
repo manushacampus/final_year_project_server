@@ -40,7 +40,10 @@ public class LoginDto {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             userDto.setDob(user.getBirthday().format(formatter));
         }
-        userDto.setRegisteredDate(user.getRegistered_date());
+        if (user.getRegistered_date() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            userDto.setRegisteredDate(user.getRegistered_date().format(formatter));
+        }
         if (user != null && user.getImage() != null && !user.getImage().isEmpty()) {
             userDto.setImage(URL.fileStorageUrl.replace("{type}","employee").replace("{fileName}",user.getImage()));
         }

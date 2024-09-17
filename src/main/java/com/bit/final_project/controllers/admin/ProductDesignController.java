@@ -61,7 +61,7 @@ public class ProductDesignController {
                                             @Param("@page") int page,
                                             @Param("@size") int size) {
         return new ResponseEntity<>(
-                new StandardResponse(HttpStatus.OK.value(),"success", designService.getALlDesignByStatusPage(status,page,size)),HttpStatus.OK
+                new StandardResponse(HttpStatus.OK.value(),"success", designService.getALlDesignByStatusPage(status,page,size,type)),HttpStatus.OK
         );
     }
 

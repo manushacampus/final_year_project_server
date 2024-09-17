@@ -7,6 +7,8 @@ import com.bit.final_project.dto.entityDto.OrderDto;
 import com.bit.final_project.models.Cart;
 import com.bit.final_project.models.Order;
 
+import com.bit.final_project.models.OrderStock;
+import com.bit.final_project.models.StockItem;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
@@ -27,4 +29,6 @@ public interface OrderService {
     Order cancelOrder(String orderId);
     Order completeOrder(String orderId,OrderCompleteDto request) throws IOException;
     int getTotalOrders(String status);
+
+    List<StockItem> getStockByOrder(String orderId);
 }

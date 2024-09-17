@@ -1,5 +1,6 @@
 package com.bit.final_project.repositories.Design;
 
+import com.bit.final_project.enums.DESIGN_TYPE;
 import com.bit.final_project.enums.Status;
 import com.bit.final_project.models.Design;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DesignRepository extends JpaRepository<Design,String> {
 
+    Page<Design> findAllByStatusAndType(Pageable pageable, Status status, DESIGN_TYPE type);
     Page<Design> findAllByStatus(Pageable pageable, Status status);
     Page<Design> findAll(Pageable pageable);
 }
