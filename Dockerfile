@@ -7,7 +7,6 @@ COPY src ./src
 EXPOSE 8080
 
 RUN gradle build --no-daemon
-
 # Stage 2: Application stage
 FROM openjdk:11-jre-slim
 WORKDIR /app
