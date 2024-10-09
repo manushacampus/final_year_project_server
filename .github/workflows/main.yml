@@ -16,11 +16,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Install and run Talisman to detect sensitive data
+      run: |
+        curl https://thoughtworks.github.io/talisman/install.sh | bash
+        ./bin/talisman --scan
+
     - name: Build Docker Image
       run: |
-        docker build -t  pasindu55/alumini-backend:latest .
-        docker tag pasindu55/alumini-backend:latest  pasindu55/alumini-backend:${{ github.run_id }}
-
+        docker build -t pasindu55/alumini-backend:latest .
+        docker tag pasindu55/alumini-backend:latest pasindu55/alumini-backend:${{ github.run_id }}
 
     - name: Login to DockerHub
       run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
@@ -53,8 +57,14 @@ jobs:
           # Run the new container
           docker run -d --name alumini_back -p 8080:8080 pasindu55/alumini-backend:latest
           
+          # Ensure the /tmp/FinalProjectStorage folder exists on the server
+          if [ ! -d "/tmp/FinalProjectStorage" ]; then
+            echo "Folder /tmp/FinalProjectStorage does not exist on the server."
+            exit 1
+          fi
+          
           # Copy the FinalProjectStorage folder into the running container
           docker cp /tmp/FinalProjectStorage alumini_back:/app/FinalProjectStorage
           
-          # Verify the folder is copied correctly
-          docker exec -it alumini_back ls /app
+          # Verify the folder is copied correctly by listing contents
+          docker exec -it alumini_back ls /app/FinalProjectStorage
