@@ -19,7 +19,12 @@ jobs:
     - name: Install and run Talisman to detect sensitive data
       run: |
         curl https://thoughtworks.github.io/talisman/install.sh | bash
-        ./bin/talisman --scan
+        # Download the correct version of Talisman to a known directory
+        mkdir -p ~/talisman
+        curl -L https://github.com/thoughtworks/talisman/releases/download/v1.32.0/talisman_linux_amd64 -o ~/talisman/talisman
+        chmod +x ~/talisman/talisman
+        # Run Talisman scan
+        ~/talisman/talisman --scan
 
     - name: Build Docker Image
       run: |
