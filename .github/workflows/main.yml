@@ -30,45 +30,6 @@ jobs:
         docker build -t pasindu55/alumini-backend:latest .
         docker tag pasindu55/alumini-backend:latest pasindu55/alumini-backend:${{ github.run_id }}
 
-    - name: Login to DockerHub
-      run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+ 
 
-    - name: Push Docker Image to Registry
-      run: |
-        docker push pasindu55/alumini-backend:latest
-
-    - name: Setup SSH Key
-      run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
-        chmod 600 private_key.pem
-
-    - name: Deploy to Server
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          # Pull the latest Docker image
-          docker pull pasindu55/alumini-backend:latest
-          
-          # Stop and remove the existing container if it is running
-          if [ "$(docker ps -q -f name=alumini_back)" ]; then
-            docker stop alumini_back
-            docker rm alumini_back
-          fi
-          
-          # Run the new container
-          docker run -d --name alumini_back -p 8080:8080 pasindu55/alumini-backend:latest
-          
-          # Ensure the /tmp/FinalProjectStorage folder exists on the server
-          if [ ! -d "/tmp/FinalProjectStorage" ]; then
-            echo "Folder /tmp/FinalProjectStorage does not exist on the server."
-            exit 1
-          fi
-          
-          # Copy the FinalProjectStorage folder into the running container
-          docker cp /tmp/FinalProjectStorage alumini_back:/app/FinalProjectStorage
-          
-          # Verify the folder is copied correctly by listing contents
-          docker exec -it alumini_back ls /app/FinalProjectStorage
+  
