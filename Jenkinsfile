@@ -1,28 +1,18 @@
 pipeline {
-    agent any
-    environment {
-        GRADLE_HOME = '/home/ubuntu/.sdkman/candidates/gradle/current'
-        PATH = "${GRADLE_HOME}/bin:${env.PATH}"
+    agent {
+        docker {
+            image 'gradle:8.10.2'
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Optional: only if you need Docker in the Gradle container
+        }
     }
     stages {
-        stage('Check Gradle Version') {
-            steps {
-                sh 'gradle --version'
-            }
-        }
         stage('Build') {
             steps {
-                // Replace 'build' with your actual Gradle task if needed
-                sh 'gradle build'
-            }
-        }
-        stage('Run Tailsman') {
-            steps {
-                // Install Tailsman if not already installed
-                sh 'curl -sSL https://raw.githubusercontent.com/thoughtworks/tailsman/master/scripts/install.sh | bash'
+                // Checkout your code
+                checkout scm
 
-                // Run Tailsman to check for sensitive information
-                sh 'tailsman start --config tailsman.yml'
+                // Run Gradle build
+                sh 'gradle build'
             }
         }
     }
