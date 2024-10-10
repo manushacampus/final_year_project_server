@@ -11,11 +11,11 @@ pipeline {
         }
         stage('Build') {
             steps {
-                // Check Maven version to ensure it's installed
-                sh 'mvn --version'
+                // Check Gradle version to ensure it's installed
+                sh 'gradle --version'
 
-                // Clean and build the project, skipping tests for faster builds
-                sh 'mvn clean install -DskipTests'
+                // Clean and build the project using Gradle, skipping tests for faster builds
+                sh 'gradle clean build --no-daemon'
             }
         }
     }
