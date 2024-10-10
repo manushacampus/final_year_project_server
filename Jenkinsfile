@@ -5,9 +5,15 @@ pipeline {
         PATH = "${GRADLE_HOME}/bin:${env.PATH}"
     }
     stages {
-        stage('Build') {
+        stage('Check Gradle Version') {
             steps {
                 sh 'gradle --version'
+            }
+        }
+        stage('Build') {
+            steps {
+                // Replace 'build' with your actual Gradle task if needed
+                sh 'gradle build'
             }
         }
     }
