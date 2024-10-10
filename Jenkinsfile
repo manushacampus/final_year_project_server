@@ -16,5 +16,14 @@ pipeline {
                 sh 'gradle build'
             }
         }
+        stage('Run Tailsman') {
+            steps {
+                // Install Tailsman if not already installed
+                sh 'curl -sSL https://raw.githubusercontent.com/thoughtworks/tailsman/master/scripts/install.sh | bash'
+
+                // Run Tailsman to check for sensitive information
+                sh 'tailsman start --config tailsman.yml'
+            }
+        }
     }
 }
