@@ -22,5 +22,11 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 --cleanup
+
 volumes:
   db_data:
