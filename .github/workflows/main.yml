@@ -1,4 +1,4 @@
-name: CI Docker Compose (No DB, No Push)
+name: CI Docker Compose (Spring Boot)
 
 on:
   push:
@@ -13,19 +13,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repository
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step 2: Cache Gradle dependencies for faster builds
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      # Step 3: Set up Docker Buildx (optional, improves builds)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Step 4: Build backend Docker image
       - name: Build backend image
         run: docker build -t my-backend:latest ./backend
 
+      # Step 5: Build frontend Docker image (if you have frontend)
       - name: Build frontend image
         run: docker build -t my-frontend:latest ./frontend
 
-      - name: Run Docker Compose
-        run: docker-compose up -d
+      # Step 6: Copy .env for Docker Compose
+      - name: Copy .env
+        run: cp .env ./docker-compose.env
 
-  
+      # Step 7: Start Docker Compose
+      - name: Start Docker Compose
+        run: docker-compose --env-file docker-compose.env up -d
+
+      # Step 8: Wait for backend to be ready (simple wait)
+      - name: Wait for backend
+        run: |
+          echo "Waiting 20 seconds for backend to start..."
+          sleep 20
+
+      # Step 9: Run backend tests
+      - name: Run backend tests
+        run: docker exec $(docker ps -qf "name=backend") ./run-tests.sh
+
+      # Step 10: Tear down Docker Compose
+      - name: Tear down
+        run: docker-compose down
