@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  backend:
+    image: my-backend:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=mysql://root:password@db:3306/final_project_db
+    depends_on:
+      - db
+
+  frontend:
+    image: my-frontend:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
