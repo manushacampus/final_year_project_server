@@ -26,17 +26,10 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
-      # Step 3: Set up Docker Buildx (optional, improves builds)
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
 
       # Step 4: Build backend Docker image
       - name: Build backend image
         run: docker build -t my-backend:latest ./backend
-
-      # Step 5: Build frontend Docker image (if you have frontend)
-      - name: Build frontend image
-        run: docker build -t my-frontend:latest ./frontend
 
       # Step 6: Copy .env for Docker Compose
       - name: Copy .env
