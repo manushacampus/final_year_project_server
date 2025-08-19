@@ -3,7 +3,7 @@ version: "3.9"
 services:
   backend:
     build:
-      context: ./final_year_project_server/final_year_project_server  # folder with Dockerfile
+      context: . # folder with Dockerfile
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
