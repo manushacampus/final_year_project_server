@@ -9,12 +9,13 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repo
-      - uses: actions/checkout@v3
+      # Step 1: Checkout repository
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
       # Step 2: Cache Gradle dependencies
       - name: Cache Gradle
@@ -25,33 +26,41 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
-      # Step 3: List files (debugging)
-      - name: List repo files
-        run: ls -R
-
-      # Step 4: Build backend image
+      # Step 3: Build backend Docker image
       - name: Build backend image
         run: docker build -t my-backend:latest .
 
-      # Step 5: Optional frontend build
+      # Step 4: Optional frontend build
       - name: Build frontend image
         run: |
           if [ -d "./frontend" ]; then
             docker build -t my-frontend:latest ./frontend
           fi
 
-      # Step 6: Copy .env
+      # Step 5: Copy .env for Docker Compose
       - name: Copy .env
         run: cp .env ./docker-compose.env
 
-      # Step 7: Start Docker Compose
+      # Step 6: Start Docker Compose
       - name: Start Docker Compose
         run: docker compose --env-file docker-compose.env up -d --build
 
-      # Step 8: Wait for backend
+      # Step 7: Wait for backend
       - name: Wait for backend
         run: sleep 20
 
-      # Step 10: Tear down
+      # Step 8: Docker login (hardcoded for testing)
+      - name: Docker login
+        run: echo "dckr_pat_F8fqrP6locivH18bexo9950q63c" | docker login -u pasindu55 --password-stdin
+
+      # Step 9: Tag Docker image for Docker Hub
+      - name: Tag image
+        run: docker tag my-backend:latest pasindu55/final-year-project:latest
+
+      # Step 10: Push Docker image to Docker Hub
+      - name: Push Docker image
+        run: docker push pasindu55/final-year-project:latest
+
+      # Step 11: Tear down Docker Compose
       - name: Tear down
         run: docker compose down
