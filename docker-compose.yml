@@ -2,16 +2,20 @@ version: "3.9"
 
 services:
   backend:
-    image: my-backend:latest
+    build:
+      context: ./backend      # path to your Spring Boot Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      DATABASE_URL: ${DATABASE_URL}  # comes from .env
     depends_on:
-      - db
+      - db     # optional if using internal DB
 
   frontend:
-    image: my-frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     depends_on:
