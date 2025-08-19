@@ -29,26 +29,7 @@ jobs:
       # Step 3: Build backend Docker image
       - name: Build backend image
         run: docker build -t my-backend:latest .
-
-      # Step 4: Optional frontend build
-      - name: Build frontend image
-        run: |
-          if [ -d "./frontend" ]; then
-            docker build -t my-frontend:latest ./frontend
-          fi
-
-      # Step 5: Copy .env for Docker Compose
-      - name: Copy .env
-        run: cp .env ./docker-compose.env
-
-      # Step 6: Start Docker Compose
-      - name: Start Docker Compose
-        run: docker compose --env-file docker-compose.env up -d --build
-
-      # Step 7: Wait for backend
-      - name: Wait for backend
-        run: sleep 20
-
+  
       # Step 8: Docker login (hardcoded for testing)
       - name: Docker login
         run: echo "dckr_pat_F8fqrP6locivH18bexo9950q63c" | docker login -u pasindu55 --password-stdin
