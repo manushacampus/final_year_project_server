@@ -31,7 +31,7 @@ jobs:
 
       # Step 4: Build backend image
       - name: Build backend image
-        run: docker build -t my-backend:latest ./final_year_project_server/final_year_project_server
+        run: docker build -t my-backend:latest .
 
       # Step 5: Optional frontend build
       - name: Build frontend image
