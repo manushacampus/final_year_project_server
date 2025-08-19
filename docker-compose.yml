@@ -10,14 +10,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
 
-  frontend:
-    build:
-      context: ./frontend  # optional
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
+
 
   db:
     image: mysql:8.0
