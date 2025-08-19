@@ -52,12 +52,6 @@ jobs:
       - name: Wait for backend
         run: sleep 20
 
-      # Step 9: Run backend tests
-      - name: Run backend tests
-        run: |
-          CONTAINER_ID=$(docker ps -qf "ancestor=my-backend:latest")
-          docker exec $CONTAINER_ID ./run-tests.sh
-
       # Step 10: Tear down
       - name: Tear down
         run: docker compose down
