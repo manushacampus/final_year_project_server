@@ -1,32 +1,113 @@
-version: "3.9"
-
 services:
-  backend:
-    build:
-      context: . # folder with Dockerfile
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-
-
-
-  db:
+  # -------------------------
+  # MySQL Database
+  # -------------------------
+  final-year-db:
     image: mysql:8.0
+    container_name: final-year-db
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - app_network
 
-  watchtower:
-    image: containrrr/watchtower
+  # -------------------------
+  # Spring Boot Backend
+  # -------------------------
+  final-year-backend:
+    build: ./backend
+    container_name: final-year-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://final-year-db:3306/${MYSQL_DATABASE}?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      APP_ENVIRONMENT: dev
+    ports:
+      - "8080:8080"
+    depends_on:
+      - final-year-db
+    networks:
+      - app_network
+
+  # -------------------------
+  # Elasticsearch
+  # -------------------------
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 30 --cleanup
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - app_network
 
+  # -------------------------
+  # Logstash
+  # -------------------------
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.15.0
+    container_name: logstash
+    volumes:
+      - ./elk/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    ports:
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+    networks:
+      - app_network
+
+  # -------------------------
+  # Kibana
+  # -------------------------
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - app_network
+
+  # -------------------------
+  # Filebeat
+  # -------------------------
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.15.0
+    container_name: filebeat
+    user: root
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./elk/filebeat.yml:/usr/share/filebeat/filebeat.yml
+    depends_on:
+      - logstash
+    networks:
+      - app_network
+
+# -------------------------
+# Volumes
+# -------------------------
 volumes:
   db_data:
+  es_data:
+
+# -------------------------
+# Network
+# -------------------------
+networks:
+  app_network:
+    driver: bridge
